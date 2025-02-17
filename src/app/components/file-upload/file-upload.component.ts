@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { FileParserService } from '../../services/file-parser.service';
 import { CommonModule } from '@angular/common';
-import { TransactionMapperService } from '../../services/transaction-mapper.service';
 import { Transaction } from '../../models/transaction.model';
+import { TransactionsService } from '../../services/transactions.service';
+import { Observable } from 'rxjs';
+import { Categories } from '../../models/categories.model';
 
 @Component({
   selector: 'app-file-upload',
@@ -11,18 +12,20 @@ import { Transaction } from '../../models/transaction.model';
   styleUrl: './file-upload.component.scss'
 })
 export class FileUploadComponent {
-  parsedData: any[] = [];
-  parsedTransactions: Transaction[] = [];
+  transactions$: Observable<Transaction[]>;
+  categories$: Observable<Categories>;
 
-  constructor(private fileParserService: FileParserService, private transactionMapper: TransactionMapperService) {}
+  constructor(private transactionsService: TransactionsService) {
+    this.transactions$ = this.transactionsService.transactions$;
+    this.categories$ = this.transactionsService.categories$;
+  }
 
-  onFileChange(event: any) {
+  async onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.fileParserService.parseCsv(file).then(data => {
-        this.parsedData = data;
-        this.parsedTransactions = this.transactionMapper.mapTransactions(data);
-      }).catch(error => console.error('Error parsing CSV:', error));
+      this.transactionsService.processTansactionsFromFile(file)
+    } else {
+      console.error('No file selected');
     }
   }
 }
