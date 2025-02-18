@@ -1,82 +1,49 @@
 import { Injectable } from '@angular/core';
-import { CategorisationResult } from '../../models/categorisation-result';
-import { FixedCost } from '../../models/categories/fixed-cost.model';
 import { Transaction } from '../../models/transaction.model';
+import { FixedCost } from '../../models/categories/fixed-cost.model';
+import { CategorisationResult } from '../../models/categorisation-result';
+import { CategorizationBaseService } from '../categorization.base.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FixedCostService {
+export class FixedCostService extends CategorizationBaseService<Omit<FixedCost, 'subscriptions'>> {
 
-  // Mapping for rent and internet categorization
-  private rentAndInternetMappings: Record<keyof Omit<FixedCost, 'subscriptions'>, (transaction: Transaction) => boolean> = {
+  protected mappings: Record<keyof Omit<FixedCost, 'subscriptions'>, (transaction: Transaction) => boolean> = {
     rent: (transaction) => transaction.description.includes('CZYNSZ I OPŁATY'),
     internet: (transaction) => transaction.recipientOrSender?.includes('TELEWIZJA KABLOWA') ?? false
   };
 
-  // Mapping for subscription categorization
-  private subscriptionMappings: Record<string, (transaction: Transaction) => boolean> = {
-    Spotify: (transaction) => transaction.description.includes('SPOTIFY'),
-    iCloud: (transaction) => transaction.description.includes('APPLE.COM/BILL'),
-    'YouTube Premium': (transaction) => transaction.description.includes('YouTubePremium'),
-    'Google One': (transaction) => transaction.description.includes('Google One')
-  };
-
   public getFixedCost(transactions: Transaction[]): CategorisationResult<FixedCost> {
-    // Step 1: Categorize rent and internet transactions
-    const { categorizedData: rentAndInternetCategorized, remainingTransactions: remainingRentAndInternetTransactions } =
-      this.categorizeRentAndInternet(transactions);
-
-    // Step 2: Categorize subscriptions
-    const { categorizedData: subscriptions, remainingTransactions: remainingSubscriptionTransactions } =
-      this.categorizeSubscriptions(remainingRentAndInternetTransactions);
-
-    // Combine the results
-    const categorized: FixedCost = {
-      rent: rentAndInternetCategorized.rent,
-      internet: rentAndInternetCategorized.internet,
-      subscriptions
+    const initialData: Omit<FixedCost, 'subscriptions'> = {
+      rent: [],
+      internet: []
     };
+
+    const { categorizedData, remainingTransactions } = this.categorize(transactions, initialData);
+
+    // Handle subscriptions separately (if needed)
+    const subscriptions = this.categorizeSubscriptions(remainingTransactions);
 
     return {
-      categorizedData: categorized,
-      remainingTransactions: remainingSubscriptionTransactions
+      categorizedData: { ...categorizedData, subscriptions: subscriptions.categorizedData },
+      remainingTransactions: subscriptions.remainingTransactions
     };
-  }
-
-  private categorizeRentAndInternet(transactions: Transaction[]): CategorisationResult<Omit<FixedCost, 'subscriptions'>> {
-    const categorizedData = {
-      rent: [] as Transaction[],
-      internet: [] as Transaction[]
-    };
-
-    const remainingTransactions = transactions.reduce<Transaction[]>((acc, transaction) => {
-      let categorized = false;
-
-      for (const [category, isCategory] of Object.entries(this.rentAndInternetMappings)) {
-        if (isCategory(transaction)) {
-          categorizedData[category as keyof Omit<FixedCost, 'subscriptions'>].push(transaction);
-          categorized = true;
-          break;
-        }
-      }
-
-      if (!categorized) {
-        acc.push(transaction);
-      }
-
-      return acc;
-    }, []);
-
-    return { categorizedData, remainingTransactions };
   }
 
   private categorizeSubscriptions(transactions: Transaction[]): CategorisationResult<Record<string, Transaction[]>> {
+    const subscriptionMappings: Record<string, (transaction: Transaction) => boolean> = {
+      'Spotify': (transaction) => transaction.description.includes('SPOTIFY'),
+      'iCloud': (transaction) => transaction.description.includes('APPLE.COM/BILL'),
+      'YouTube Premium': (transaction) => transaction.description.includes('YouTubePremium'),
+      'Google One': (transaction) => transaction.description.includes('Google One')
+    };
+
     const subscriptions: Record<string, Transaction[]> = {};
     const remainingTransactions = transactions.reduce<Transaction[]>((acc, transaction) => {
       let categorized = false;
 
-      for (const [category, isCategory] of Object.entries(this.subscriptionMappings)) {
+      for (const [category, isCategory] of Object.entries(subscriptionMappings)) {
         if (isCategory(transaction)) {
           subscriptions[category] = [...(subscriptions[category] || []), transaction];
           categorized = true;
