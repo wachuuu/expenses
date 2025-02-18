@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
 import { FileParserService } from './file-parser.service';
 import { TransactionMapperService } from './transaction-mapper.service';
-import { BehaviorSubject, scan, shareReplay } from 'rxjs';
+import { BehaviorSubject, map, scan, shareReplay } from 'rxjs';
 import { Categories } from '../models/categories.model';
 import { FixedCostService } from './categories/fixed-cost.service';
 import { GroceriesService } from './categories/groceries.service';
+import { TransportService } from './categories/transport.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,13 @@ export class TransactionsService {
     scan((_: Categories, transactions: Transaction[]) => {
       const fixedCost = this.fixedCostService.getFixedCost(transactions);
       const groceries = this.groceriesService.getGroceries(fixedCost.remainingTransactions);
+      const transport = this.transportService.getTransport(groceries.remainingTransactions);
+
       return {
         fixedCost: fixedCost.categorizedData, 
         groceries: groceries.categorizedData,
-        other: groceries.remainingTransactions 
+        transport: transport.categorizedData,
+        other: transport.remainingTransactions 
       };
     }, 
     {
@@ -36,11 +40,16 @@ export class TransactionsService {
     shareReplay(1)
   );
 
+  fixedCosts$ = this.categories$.pipe(map(state => state.fixedCost));
+  transport$ = this.categories$.pipe(map(state => state.transport));
+  groceries$ = this.categories$.pipe(map(state => state.groceries));
+
   constructor(
     private fileParserService: FileParserService, 
     private transactionMapper: TransactionMapperService, 
     private fixedCostService: FixedCostService,
-    private groceriesService: GroceriesService
+    private groceriesService: GroceriesService,
+    private transportService: TransportService
   ) { }
 
   async processTansactionsFromFile(file: any): Promise<void> {
