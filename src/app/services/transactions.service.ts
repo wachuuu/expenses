@@ -8,6 +8,7 @@ import { FixedCostService } from './categories/fixed-cost.service';
 import { GroceriesService } from './categories/groceries.service';
 import { TransportService } from './categories/transport.service';
 import { MobilePaymentsService } from './categories/mobile-payments.service';
+import { CardPaymentsService } from './categories/card-payments.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,13 +28,15 @@ export class TransactionsService {
       const groceries = this.groceriesService.getGroceries(fixedCost.remainingTransactions);
       const transport = this.transportService.getTransport(groceries.remainingTransactions);
       const mobilePayments = this.mobilePaymentsService.getMobilePayments(transport.remainingTransactions);
+      const cardPayments = this.cardPaymentsService.getCardPayments(mobilePayments.remainingTransactions);
 
       return {
         fixedCost: fixedCost.categorizedData, 
         groceries: groceries.categorizedData,
         transport: transport.categorizedData,
         mobilePayments: mobilePayments.categorizedData,
-        other: mobilePayments.remainingTransactions
+        cardPayments: cardPayments.categorizedData,
+        other: cardPayments.remainingTransactions
       };
     }, 
     {
@@ -53,7 +56,8 @@ export class TransactionsService {
     private fixedCostService: FixedCostService,
     private groceriesService: GroceriesService,
     private transportService: TransportService,
-    private mobilePaymentsService: MobilePaymentsService
+    private mobilePaymentsService: MobilePaymentsService,
+    private cardPaymentsService: CardPaymentsService
   ) { }
 
   async processTansactionsFromFile(file: any): Promise<void> {

@@ -8,5 +8,6 @@ export interface Categories {
   groceries?: Groceries;
   transport?: Transport;
   mobilePayments?: Transaction[];
+  cardPayments?: Transaction[];
   other: Transaction[];
 }
