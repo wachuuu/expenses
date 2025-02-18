@@ -9,13 +9,13 @@ import { Transaction } from '../../models/transaction.model';
 export class FixedCostService {
 
   // Mapping for rent and internet categorization
-  private rentAndInternetMappings: { [key: string]: (transaction: Transaction) => boolean } = {
+  private rentAndInternetMappings: Record<keyof Omit<FixedCost, 'subscriptions'>, (transaction: Transaction) => boolean> = {
     rent: (transaction) => transaction.description.includes('CZYNSZ I OPŁATY'),
     internet: (transaction) => transaction.recipientOrSender?.includes('TELEWIZJA KABLOWA') ?? false
   };
 
   // Mapping for subscription categorization
-  private subscriptionMappings: { [key: string]: (transaction: Transaction) => boolean } = {
+  private subscriptionMappings: Record<string, (transaction: Transaction) => boolean> = {
     Spotify: (transaction) => transaction.description.includes('SPOTIFY'),
     iCloud: (transaction) => transaction.description.includes('APPLE.COM/BILL'),
     'YouTube Premium': (transaction) => transaction.description.includes('YouTubePremium'),

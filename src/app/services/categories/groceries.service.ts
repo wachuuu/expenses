@@ -8,12 +8,12 @@ import { CategorisationResult } from '../../models/categorisation-result';
 })
 export class GroceriesService {
 
-  private storeMappings: { [key: string]: (transaction: Transaction) => boolean } = {
+  private storeMappings: Record<keyof Groceries, (transaction: Transaction) => boolean> = {
     biedronka: (transaction) => transaction.description.includes('BIEDRONKA'),
     lidl: (transaction) => transaction.description.includes('LIDL'),
     kaufland: (transaction) => transaction.description.includes('KAUFLAND'),
     dino: (transaction) => transaction.description.includes('DINO'),
-    zabka: (transaction) => transaction.description.includes('ZABKA')
+    zabka: (transaction) => transaction.description.includes('ZABKA'),
   };
 
   public getGroceries(transactions: Transaction[]): CategorisationResult<Groceries> {
