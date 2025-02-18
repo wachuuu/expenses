@@ -4,6 +4,7 @@ import { FileParserService } from './file-parser.service';
 import { TransactionMapperService } from './transaction-mapper.service';
 import { BehaviorSubject, scan, shareReplay } from 'rxjs';
 import { Categories } from '../models/categories.model';
+import { FixedCostService } from './categories/fixed-cost.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +20,24 @@ export class TransactionsService {
 
   categories$ = this.transactions$.pipe(
     scan((_: Categories, transactions: Transaction[]) => {
-      return { other: transactions };
+      const fixedCost = this.fixedCostService.getFixedCost(transactions);
+      return {
+        fixedCost: fixedCost.categorizedData, 
+        other: fixedCost.remainingTransactions 
+      };
     }, 
-    { 
-      other: [] 
+    {
+      fixedCost: undefined, 
+      other: []
     }),
     shareReplay(1)
   );
 
-  constructor(private fileParserService: FileParserService, private transactionMapper: TransactionMapperService) { }
+  constructor(
+    private fileParserService: FileParserService, 
+    private transactionMapper: TransactionMapperService, 
+    private fixedCostService: FixedCostService
+  ) { }
 
   async processTansactionsFromFile(file: any): Promise<void> {
     try {
