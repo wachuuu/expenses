@@ -7,5 +7,6 @@ export interface Categories {
   fixedCost?: FixedCost;
   groceries?: Groceries;
   transport?: Transport;
+  mobilePayments?: Transaction[];
   other: Transaction[];
 }
