@@ -8,14 +8,28 @@ import { Transaction } from '../../models/transaction.model';
 })
 export class FixedCostService {
 
-  constructor() { }
+  // Mapping for rent and internet categorization
+  private rentAndInternetMappings: { [key: string]: (transaction: Transaction) => boolean } = {
+    rent: (transaction) => transaction.description.includes('CZYNSZ I OPŁATY'),
+    internet: (transaction) => transaction.recipientOrSender?.includes('TELEWIZJA KABLOWA') ?? false
+  };
+
+  // Mapping for subscription categorization
+  private subscriptionMappings: { [key: string]: (transaction: Transaction) => boolean } = {
+    Spotify: (transaction) => transaction.description.includes('SPOTIFY'),
+    iCloud: (transaction) => transaction.description.includes('APPLE.COM/BILL'),
+    'YouTube Premium': (transaction) => transaction.description.includes('YouTubePremium'),
+    'Google One': (transaction) => transaction.description.includes('Google One')
+  };
 
   public getFixedCost(transactions: Transaction[]): CategorisationResult<FixedCost> {
     // Step 1: Categorize rent and internet transactions
-    const { categorizedData: rentAndInternetCategorized, remainingTransactions: remainingRentAndInternetTransactions } = this.categorizeRentAndInternet(transactions);
+    const { categorizedData: rentAndInternetCategorized, remainingTransactions: remainingRentAndInternetTransactions } =
+      this.categorizeRentAndInternet(transactions);
 
     // Step 2: Categorize subscriptions
-    const { categorizedData: subscriptions, remainingTransactions: remainingSubscriptionTransactions } = this.categorizeSubscriptions(remainingRentAndInternetTransactions);
+    const { categorizedData: subscriptions, remainingTransactions: remainingSubscriptionTransactions } =
+      this.categorizeSubscriptions(remainingRentAndInternetTransactions);
 
     // Combine the results
     const categorized: FixedCost = {
@@ -37,36 +51,43 @@ export class FixedCostService {
     };
 
     const remainingTransactions = transactions.reduce<Transaction[]>((acc, transaction) => {
-      if (this.isRentTransaction(transaction)) {
-        categorizedData.rent.push(transaction);
-      } else if (this.isInternetTransaction(transaction)) {
-        categorizedData.internet.push(transaction);
-      } else {
+      let categorized = false;
+
+      for (const [category, isCategory] of Object.entries(this.rentAndInternetMappings)) {
+        if (isCategory(transaction)) {
+          categorizedData[category as keyof Omit<FixedCost, 'subscriptions'>].push(transaction);
+          categorized = true;
+          break;
+        }
+      }
+
+      if (!categorized) {
         acc.push(transaction);
       }
+
       return acc;
     }, []);
 
     return { categorizedData, remainingTransactions };
   }
 
-  private isRentTransaction(transaction: Transaction): boolean {
-    return transaction.description.includes('CZYNSZ I OPŁATY');
-  }
-
-  private isInternetTransaction(transaction: Transaction): boolean {
-    return transaction.recipientOrSender?.includes('TELEWIZJA KABLOWA') ?? false;
-  }
-
   private categorizeSubscriptions(transactions: Transaction[]): CategorisationResult<Record<string, Transaction[]>> {
     const subscriptions: Record<string, Transaction[]> = {};
     const remainingTransactions = transactions.reduce<Transaction[]>((acc, transaction) => {
-      const subscriptionCategory = this.getSubscriptionCategory(transaction);
-      if (subscriptionCategory) {
-        subscriptions[subscriptionCategory] = [...(subscriptions[subscriptionCategory] || []), transaction];
-      } else {
+      let categorized = false;
+
+      for (const [category, isCategory] of Object.entries(this.subscriptionMappings)) {
+        if (isCategory(transaction)) {
+          subscriptions[category] = [...(subscriptions[category] || []), transaction];
+          categorized = true;
+          break;
+        }
+      }
+
+      if (!categorized) {
         acc.push(transaction);
       }
+
       return acc;
     }, []);
 
@@ -74,18 +95,5 @@ export class FixedCostService {
       categorizedData: subscriptions,
       remainingTransactions
     };
-  }
-
-  private getSubscriptionCategory(transaction: Transaction): string | null {
-    if (transaction.description.includes('SPOTIFY')) {
-      return 'Spotify';
-    } else if (transaction.description.includes('APPLE.COM/BILL')) {
-      return 'iCloud';
-    } else if (transaction.description.includes('YouTubePremium')) {
-      return 'YouTube Premium';
-    } else if (transaction.description.includes('Google One')) {
-      return 'Google One';
-    }
-    return null;
   }
 }
