@@ -5,6 +5,7 @@ import { TransactionMapperService } from './transaction-mapper.service';
 import { BehaviorSubject, scan, shareReplay } from 'rxjs';
 import { Categories } from '../models/categories.model';
 import { FixedCostService } from './categories/fixed-cost.service';
+import { GroceriesService } from './categories/groceries.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,11 @@ export class TransactionsService {
   categories$ = this.transactions$.pipe(
     scan((_: Categories, transactions: Transaction[]) => {
       const fixedCost = this.fixedCostService.getFixedCost(transactions);
+      const groceries = this.groceriesService.getGroceries(fixedCost.remainingTransactions);
       return {
         fixedCost: fixedCost.categorizedData, 
-        other: fixedCost.remainingTransactions 
+        groceries: groceries.categorizedData,
+        other: groceries.remainingTransactions 
       };
     }, 
     {
@@ -36,7 +39,8 @@ export class TransactionsService {
   constructor(
     private fileParserService: FileParserService, 
     private transactionMapper: TransactionMapperService, 
-    private fixedCostService: FixedCostService
+    private fixedCostService: FixedCostService,
+    private groceriesService: GroceriesService
   ) { }
 
   async processTansactionsFromFile(file: any): Promise<void> {
