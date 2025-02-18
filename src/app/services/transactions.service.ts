@@ -9,6 +9,7 @@ import { GroceriesService } from './categories/groceries.service';
 import { TransportService } from './categories/transport.service';
 import { MobilePaymentsService } from './categories/mobile-payments.service';
 import { CardPaymentsService } from './categories/card-payments.service';
+import { OnlinePaymentsService } from './categories/online-payments.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class TransactionsService {
       const transport = this.transportService.getTransport(groceries.remainingTransactions);
       const mobilePayments = this.mobilePaymentsService.getMobilePayments(transport.remainingTransactions);
       const cardPayments = this.cardPaymentsService.getCardPayments(mobilePayments.remainingTransactions);
+      const onlinePayments = this.onlinePaymentsService.getOnlinePayments(cardPayments.remainingTransactions);
 
       return {
         fixedCost: fixedCost.categorizedData, 
@@ -36,7 +38,8 @@ export class TransactionsService {
         transport: transport.categorizedData,
         mobilePayments: mobilePayments.categorizedData,
         cardPayments: cardPayments.categorizedData,
-        other: cardPayments.remainingTransactions
+        onlinePayments: onlinePayments.categorizedData,
+        other: onlinePayments.remainingTransactions
       };
     }, 
     {
@@ -49,6 +52,10 @@ export class TransactionsService {
   fixedCosts$ = this.categories$.pipe(map(state => state.fixedCost));
   transport$ = this.categories$.pipe(map(state => state.transport));
   groceries$ = this.categories$.pipe(map(state => state.groceries));
+  mobilePayments$ = this.categories$.pipe(map(state => state.mobilePayments));
+  cardPayments$ = this.categories$.pipe(map(state => state.cardPayments));
+  onlinePayments$ = this.categories$.pipe(map(state => state.onlinePayments));
+  other$ = this.categories$.pipe(map(state => state.other));
 
   constructor(
     private fileParserService: FileParserService, 
@@ -57,7 +64,8 @@ export class TransactionsService {
     private groceriesService: GroceriesService,
     private transportService: TransportService,
     private mobilePaymentsService: MobilePaymentsService,
-    private cardPaymentsService: CardPaymentsService
+    private cardPaymentsService: CardPaymentsService,
+    private onlinePaymentsService: OnlinePaymentsService
   ) { }
 
   async processTansactionsFromFile(file: any): Promise<void> {

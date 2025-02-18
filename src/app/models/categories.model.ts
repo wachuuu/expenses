@@ -9,5 +9,6 @@ export interface Categories {
   transport?: Transport;
   mobilePayments?: Transaction[];
   cardPayments?: Transaction[];
+  onlinePayments?: Transaction[];
   other: Transaction[];
 }
