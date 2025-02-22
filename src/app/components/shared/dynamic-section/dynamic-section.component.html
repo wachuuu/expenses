@@ -1,17 +1,21 @@
 <div>
   <div class="header">
-    <h3>{{ title }}</h3>
+    <h4>{{ title }}</h4>
     <p>Łącznie: <strong>{{ total | price }}</strong></p>
     <button (click)="showOrHideTransactions()">Pokaż szczegóły</button>
   </div>
   <ng-container *ngIf="showTransactions">
-    <ul *ngFor="let record of recordEntries">
-      <p>{{ record[0] }}: {{ record[1] | price }}</p>
-      <li *ngFor="let transaction of record[2]">
-        <div class="item">
-          <p>{{ transaction.recipientOrSender }} - {{ transaction.description }}: {{ transaction.amount }}</p>
-        </div>
-      </li>
-    </ul>
+    <ng-container *ngFor="let record of recordEntries">
+      <ng-container *ngIf="record[2].length > 0">
+        <p>{{ record[0] }}: {{ record[1] | price }}</p>
+        <ul>
+          <li *ngFor="let transaction of record[2]">
+            <div class="item">
+              <p>{{ transaction.recipientOrSender }} - {{ transaction.description }}: {{ transaction.amount }}</p>
+            </div>
+          </li>
+        </ul>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </div>

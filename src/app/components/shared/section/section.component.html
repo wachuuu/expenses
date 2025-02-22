@@ -1,6 +1,6 @@
-<div>
+<div *ngIf="transactions.length > 0">
   <div class="header">
-    <h3>{{ title }}</h3>
+    <h4>{{ title }}</h4>
     <p>Łącznie: <strong>{{ total | price }}</strong></p>
     <button (click)="showOrHideTransactions()">Pokaż szczegóły</button>
   </div>

@@ -3,5 +3,9 @@
     display: flex;
     align-items: center;
     gap: 2rem;
+
+    p, h4 {
+      margin: 0;
+    }
   }
 }
