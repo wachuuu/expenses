@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Groceries } from '../../../models/categories/groceries.model';
+import { Transport } from '../../../models/categories/transport.model';
 import { TransactionsService } from '../../../services/transactions.service';
 import { SectionComponent } from '../../shared/section/section.component';
-import { Transport } from '../../../models/categories/transport.model';
 
 @Component({
   selector: 'app-transport',
