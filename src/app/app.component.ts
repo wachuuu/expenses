@@ -4,10 +4,11 @@ import { FixedCostComponent } from './components/categories/fixed-cost/fixed-cos
 import { GroceriesComponent } from "./components/categories/groceries/groceries.component";
 import { TransportComponent } from "./components/categories/transport/transport.component";
 import { OnlinePaymentsComponent } from "./components/categories/online-payments/online-payments.component";
+import { OthersComponent } from "./components/categories/others/others.component";
 
 @Component({
   selector: 'app-root',
-  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent, TransportComponent, OnlinePaymentsComponent],
+  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent, TransportComponent, OnlinePaymentsComponent, OthersComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
