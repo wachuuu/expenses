@@ -1,0 +1,14 @@
+<div>
+  <div class="header">
+    <h3>{{ title }}</h3>
+    <p>Łącznie: <strong>{{ total | price }}</strong></p>
+    <button (click)="showOrHideTransactions()">Pokaż szczegóły</button>
+  </div>
+  <ul *ngIf="showTransactions">
+    <li *ngFor="let item of transactions">
+      <div class="item">
+        <p>{{ item.recipientOrSender }} - {{ item.description }}: {{ item.amount }}</p>
+      </div>
+    </li>
+  </ul>
+</div>
