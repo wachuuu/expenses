@@ -10,6 +10,7 @@ import { TransportService } from './categories/transport.service';
 import { MobilePaymentsService } from './categories/mobile-payments.service';
 import { CardPaymentsService } from './categories/card-payments.service';
 import { OnlinePaymentsService } from './categories/online-payments.service';
+import { HelperService } from './shared/helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,10 @@ export class TransactionsService {
     shareReplay(1)
   );
 
+  total$ = this.transactions$.pipe(
+    filter(transactions => transactions.length > 0),
+    map(transactions => this.helperService.getSectionTotal(transactions)),
+  )
   fixedCost$ = this.categories$.pipe(map(state => state.fixedCost), filter(fixedCost => fixedCost !== undefined));
   transport$ = this.categories$.pipe(map(state => state.transport), filter(transport => transport !== undefined));
   groceries$ = this.categories$.pipe(map(state => state.groceries), filter(groceries => groceries !== undefined));
@@ -59,7 +64,8 @@ export class TransactionsService {
   other$ = this.categories$.pipe(map(state => state.other), filter(other => other !== undefined));
 
   constructor(
-    private fileParserService: FileParserService, 
+    private fileParserService: FileParserService,
+    private helperService: HelperService,
     private transactionMapper: TransactionMapperService, 
     private fixedCostService: FixedCostService,
     private groceriesService: GroceriesService,
@@ -81,15 +87,21 @@ export class TransactionsService {
 
   transferToNonEssentialTransactions(transaction: Transaction): void {
     const transactions = this._transactions$.value;
-    const updatedTransactions = transactions.filter(t => t !== transaction);
-    this._transactions$.next(updatedTransactions);
-    this._nonEssentialTransactions$.next([...this._nonEssentialTransactions$.value, transaction]);
+    const foundTransaction = !!transactions.find(t => t === transaction);
+    if (foundTransaction) {
+      const updatedTransactions = transactions.filter(t => t !== transaction);
+      this._transactions$.next(updatedTransactions);
+      this._nonEssentialTransactions$.next([...this._nonEssentialTransactions$.value, transaction]);
+    }
   }
 
   transferToExcludedTransactions(transaction: Transaction): void {
     const transactions = this._transactions$.value;
-    const updatedTransactions = transactions.filter(t => t !== transaction);
-    this._transactions$.next(updatedTransactions);
-    this._excludedTransactions$.next([...this._excludedTransactions$.value, transaction]);
+    const foundTransaction = !!transactions.find(t => t === transaction);
+    if (foundTransaction) {
+      const updatedTransactions = transactions.filter(t => t !== transaction);
+      this._transactions$.next(updatedTransactions);
+      this._excludedTransactions$.next([...this._excludedTransactions$.value, transaction]);
+    }
   }
 }

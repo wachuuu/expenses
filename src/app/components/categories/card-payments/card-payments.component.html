@@ -1,0 +1,4 @@
+<div *ngIf="cardPayments$ | async as cardPayments">
+  <h3>Płatności kartą: {{ total | price }}</h3>
+  <app-section title="Płatności kartą" [transactions]="cardPayments"></app-section>
+</div>
