@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Transaction } from '../../../models/transaction.model';
 import { PricePipe } from "../../../pipes/price.pipe";
 import { HelperService } from '../../../services/shared/helper.service';
+import { TransactionsService } from '../../../services/transactions.service';
 
 @Component({
   selector: 'app-section',
@@ -23,9 +24,13 @@ export class SectionComponent {
   total: number = 0;
   showTransactions: boolean = false;
 
-  constructor(private helperService: HelperService) { }
+  constructor(private helperService: HelperService, private transactionService: TransactionsService) { }
 
   showOrHideTransactions() {
     this.showTransactions = !this.showTransactions
+  }
+
+  transferToNonEssentials(transaction: Transaction) {
+    this.transactionService.transferToNonEssentialTransactions(transaction);
   }
 }

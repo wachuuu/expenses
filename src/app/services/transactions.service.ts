@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
 import { FileParserService } from './file-parser.service';
 import { TransactionMapperService } from './transaction-mapper.service';
-import { BehaviorSubject, map, ReplaySubject, scan, shareReplay } from 'rxjs';
+import { BehaviorSubject, filter, lastValueFrom, map, ReplaySubject, scan, shareReplay } from 'rxjs';
 import { Categories } from '../models/categories.model';
 import { FixedCostService } from './categories/fixed-cost.service';
 import { GroceriesService } from './categories/groceries.service';
@@ -16,10 +16,13 @@ import { OnlinePaymentsService } from './categories/online-payments.service';
 })
 export class TransactionsService {
 
-  private _transactions$ = new ReplaySubject<Transaction[]>(1);
+  private _transactions$ = new BehaviorSubject<Transaction[]>([]);
+  private _nonEssentialTransactions$ = new BehaviorSubject<Transaction[]>([]);
   transactions$ = this._transactions$.asObservable().pipe(shareReplay(1));
+  nonEssentialTransactions$ = this._nonEssentialTransactions$.asObservable().pipe(filter(t => t.length > 0), shareReplay(1));
 
   categories$ = this.transactions$.pipe(
+    filter(transactions => transactions.length > 0),
     scan((_: Categories, transactions: Transaction[]) => {
       const fixedCost = this.fixedCostService.getFixedCost(transactions);
       const groceries = this.groceriesService.getGroceries(fixedCost.remainingTransactions);
@@ -52,6 +55,8 @@ export class TransactionsService {
   onlinePayments$ = this.categories$.pipe(map(state => state.onlinePayments));
   other$ = this.categories$.pipe(map(state => state.other));
 
+
+
   constructor(
     private fileParserService: FileParserService, 
     private transactionMapper: TransactionMapperService, 
@@ -71,5 +76,12 @@ export class TransactionsService {
     } catch (error) {
       console.error('Error processing transactions:', error);
     }
+  }
+
+  transferToNonEssentialTransactions(transaction: Transaction): void {
+    const transactions = this._transactions$.value;
+    const updatedTransactions = transactions.filter(t => t !== transaction);
+    this._transactions$.next(updatedTransactions);
+    this._nonEssentialTransactions$.next([...this._nonEssentialTransactions$.value, transaction]);
   }
 }

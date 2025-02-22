@@ -6,10 +6,11 @@ import { TransportComponent } from "./components/categories/transport/transport.
 import { OnlinePaymentsComponent } from "./components/categories/online-payments/online-payments.component";
 import { OthersComponent } from "./components/categories/others/others.component";
 import { MobilePaymentsComponent } from "./components/categories/mobile-payments/mobile-payments.component";
+import { NonEssentialComponent } from "./components/categories/non-essential/non-essential.component";
 
 @Component({
   selector: 'app-root',
-  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent, TransportComponent, OnlinePaymentsComponent, OthersComponent, MobilePaymentsComponent],
+  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent, TransportComponent, OnlinePaymentsComponent, OthersComponent, MobilePaymentsComponent, NonEssentialComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
