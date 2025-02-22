@@ -18,6 +18,10 @@ export class FileUploadComponent {
   constructor(private transactionsService: TransactionsService) {
     this.transactions$ = this.transactionsService.transactions$;
     this.categories$ = this.transactionsService.categories$;
+
+    this.categories$.subscribe((categories) => {
+      console.log(categories);
+    });
   }
 
   async onFileChange(event: any) {
