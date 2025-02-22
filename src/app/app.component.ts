@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FixedCostComponent } from './components/categories/fixed-cost/fixed-cost.component';
 import { GroceriesComponent } from "./components/categories/groceries/groceries.component";
+import { TransportComponent } from "./components/categories/transport/transport.component";
 
 @Component({
   selector: 'app-root',
-  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent],
+  imports: [FileUploadComponent, FixedCostComponent, GroceriesComponent, TransportComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
