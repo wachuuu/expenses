@@ -18,7 +18,7 @@ export class SectionComponent {
   }
   @Input() set transactions(value: Transaction[]) {
     this._transactions = value
-    this.total = this.helperService.getTotalAmount(value)
+    this.total = this.helperService.getSectionTotal(value)
   };
   @Input() title: string = 'Transactions';
   total: number = 0;
@@ -32,5 +32,9 @@ export class SectionComponent {
 
   transferToNonEssentials(transaction: Transaction) {
     this.transactionService.transferToNonEssentialTransactions(transaction);
+  }
+
+  transferToExcluded(transaction: Transaction) {
+    this.transactionService.transferToExcludedTransactions(transaction);
   }
 }

@@ -18,8 +18,11 @@ export class TransactionsService {
 
   private _transactions$ = new BehaviorSubject<Transaction[]>([]);
   private _nonEssentialTransactions$ = new BehaviorSubject<Transaction[]>([]);
+  private _excludedTransactions$ = new BehaviorSubject<Transaction[]>([]);
+  
   transactions$ = this._transactions$.asObservable().pipe(shareReplay(1));
   nonEssentialTransactions$ = this._nonEssentialTransactions$.asObservable().pipe(filter(t => t.length > 0), shareReplay(1));
+  excludedTransactions$ = this._excludedTransactions$.asObservable().pipe(filter(t => t.length > 0), shareReplay(1));
 
   categories$ = this.transactions$.pipe(
     filter(transactions => transactions.length > 0),
@@ -47,15 +50,13 @@ export class TransactionsService {
     shareReplay(1)
   );
 
-  fixedCost$ = this.categories$.pipe(map(state => state.fixedCost));
-  transport$ = this.categories$.pipe(map(state => state.transport));
-  groceries$ = this.categories$.pipe(map(state => state.groceries));
-  mobilePayments$ = this.categories$.pipe(map(state => state.mobilePayments));
-  cardPayments$ = this.categories$.pipe(map(state => state.cardPayments));
-  onlinePayments$ = this.categories$.pipe(map(state => state.onlinePayments));
-  other$ = this.categories$.pipe(map(state => state.other));
-
-
+  fixedCost$ = this.categories$.pipe(map(state => state.fixedCost), filter(fixedCost => fixedCost !== undefined));
+  transport$ = this.categories$.pipe(map(state => state.transport), filter(transport => transport !== undefined));
+  groceries$ = this.categories$.pipe(map(state => state.groceries), filter(groceries => groceries !== undefined));
+  mobilePayments$ = this.categories$.pipe(map(state => state.mobilePayments), filter(mobilePayments => mobilePayments !== undefined));
+  cardPayments$ = this.categories$.pipe(map(state => state.cardPayments), filter(cardPayments => cardPayments !== undefined));
+  onlinePayments$ = this.categories$.pipe(map(state => state.onlinePayments), filter(onlinePayments => onlinePayments !== undefined));
+  other$ = this.categories$.pipe(map(state => state.other), filter(other => other !== undefined));
 
   constructor(
     private fileParserService: FileParserService, 
@@ -83,5 +84,12 @@ export class TransactionsService {
     const updatedTransactions = transactions.filter(t => t !== transaction);
     this._transactions$.next(updatedTransactions);
     this._nonEssentialTransactions$.next([...this._nonEssentialTransactions$.value, transaction]);
+  }
+
+  transferToExcludedTransactions(transaction: Transaction): void {
+    const transactions = this._transactions$.value;
+    const updatedTransactions = transactions.filter(t => t !== transaction);
+    this._transactions$.next(updatedTransactions);
+    this._excludedTransactions$.next([...this._excludedTransactions$.value, transaction]);
   }
 }

@@ -17,8 +17,8 @@ export class DynamicSectionComponent {
   }
   @Input() set transactions(value: Record<string, Transaction[]>) {
     this._transactions = value
-    this.total = this.helperService.getTotalAmount(value)
-    this.recordEntries = Object.entries(value).map(([key, transactions]) => [key, this.helperService.getTotalAmount(transactions), transactions]);
+    this.total = this.helperService.getSectionTotal(value)
+    this.recordEntries = Object.entries(value).map(([key, transactions]) => [key, this.helperService.getSectionTotal(transactions), transactions]);
   };
   @Input() title: string = 'Transactions';
   total: number = 0;

@@ -1,5 +1,5 @@
 <div *ngIf="fixedCost$ | async as fixedCost">
-  <h3>Stałe koszty</h3>
+  <h3>Stałe koszty: {{ total | price }}</h3>
   <app-section [transactions]="fixedCost.rent" title="Czynsz"></app-section>
   <app-section [transactions]="fixedCost.internet" title="Internet"></app-section>
   <app-dynamic-section [transactions]="fixedCost.subscriptions" title="Subskrybcje"></app-dynamic-section>

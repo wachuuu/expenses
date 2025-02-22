@@ -9,6 +9,7 @@
       <div class="item">
         <p>{{ item.recipientOrSender }} - {{ item.description }}: {{ item.amount }}</p>
         <button (click)="transferToNonEssentials(item)">Dodaj do zbędnych</button>
+        <button (click)="transferToExcluded(item)">Wyłącz z analizy</button>
       </div>
     </li>
   </ul>

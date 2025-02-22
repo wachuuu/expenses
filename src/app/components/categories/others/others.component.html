@@ -1,4 +1,4 @@
 <div *ngIf="other$ | async as other">
-  <h3>Przelewy i inne płatności</h3>
+  <h3>Przelewy i inne płatności: {{ total | price }}</h3>
   <app-section title="Inne" [transactions]="other"></app-section>
 </div>

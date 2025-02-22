@@ -1,5 +1,5 @@
 <div *ngIf="groceries$ | async as groceries">
-  <h3>Artykuły spożywcze</h3>
+  <h3>Artykuły spożywcze: {{ total | price }}</h3>
   <app-section title="Biedronka" [transactions]="groceries.biedronka"></app-section>
   <app-section title="Lidl" [transactions]="groceries.lidl"></app-section>
   <app-section title="Kaufland" [transactions]="groceries.kaufland"></app-section>
