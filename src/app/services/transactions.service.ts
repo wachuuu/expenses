@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
 import { FileParserService } from './file-parser.service';
 import { TransactionMapperService } from './transaction-mapper.service';
-import { BehaviorSubject, map, scan, shareReplay } from 'rxjs';
+import { BehaviorSubject, map, ReplaySubject, scan, shareReplay } from 'rxjs';
 import { Categories } from '../models/categories.model';
 import { FixedCostService } from './categories/fixed-cost.service';
 import { GroceriesService } from './categories/groceries.service';
@@ -16,12 +16,8 @@ import { OnlinePaymentsService } from './categories/online-payments.service';
 })
 export class TransactionsService {
 
-  private _transactions$ = new BehaviorSubject<Transaction[]>([]);
+  private _transactions$ = new ReplaySubject<Transaction[]>(1);
   transactions$ = this._transactions$.asObservable().pipe(shareReplay(1));
-  
-  get transactions(): Transaction[] {
-    return this._transactions$.getValue();
-  }
 
   categories$ = this.transactions$.pipe(
     scan((_: Categories, transactions: Transaction[]) => {
@@ -43,13 +39,12 @@ export class TransactionsService {
       };
     }, 
     {
-      fixedCost: undefined, 
       other: []
     }),
     shareReplay(1)
   );
 
-  fixedCosts$ = this.categories$.pipe(map(state => state.fixedCost));
+  fixedCost$ = this.categories$.pipe(map(state => state.fixedCost));
   transport$ = this.categories$.pipe(map(state => state.transport));
   groceries$ = this.categories$.pipe(map(state => state.groceries));
   mobilePayments$ = this.categories$.pipe(map(state => state.mobilePayments));
