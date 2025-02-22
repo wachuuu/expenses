@@ -1,0 +1,7 @@
+<div *ngIf="groceries$ | async as groceries">
+  <app-section title="Biedronka" [transactions]="groceries.biedronka"></app-section>
+  <app-section title="Lidl" [transactions]="groceries.lidl"></app-section>
+  <app-section title="Kaufland" [transactions]="groceries.kaufland"></app-section>
+  <app-section title="Żabka" [transactions]="groceries.zabka"></app-section>
+  <app-section title="Dino" [transactions]="groceries.dino"></app-section>
+</div>
