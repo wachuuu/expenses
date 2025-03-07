@@ -5,5 +5,5 @@ export interface Groceries {
   lidl: Transaction[];
   kaufland: Transaction[];
   dino: Transaction[];
-  zabka: Transaction[];
+  others: Transaction[];
 }

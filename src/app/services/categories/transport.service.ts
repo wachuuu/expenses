@@ -29,12 +29,14 @@ export class TransportService extends CategorizationBaseService<Transport> {
   private isFuel(transaction: Transaction): boolean {
     return transaction.description.includes('ORLEN') 
       || transaction.description.includes('SHELL')
+      || transaction.description.includes('CIRCLE K')
+      || transaction.description.includes('STACJA PALIW')
       || transaction.description.includes('AMICA')
       || transaction.description.includes('HAWA');
   }
 
   private isPublicTransport(transaction: Transaction): boolean {
-    return transaction.type === TransactionType.TRANSPORT_TICKET;
+    return transaction.type === TransactionType.TRANSPORT_TICKET || transaction.description.includes('MENNICA AUTOMAT');
   }
 
   private isTaxi(transaction: Transaction): boolean {

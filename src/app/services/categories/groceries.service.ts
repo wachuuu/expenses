@@ -14,7 +14,7 @@ export class GroceriesService extends CategorizationBaseService<Groceries> {
     lidl: (transaction) => transaction.description.includes('LIDL'),
     kaufland: (transaction) => transaction.description.includes('KAUFLAND'),
     dino: (transaction) => transaction.description.includes('DINO'),
-    zabka: (transaction) => transaction.description.toUpperCase().includes('ZABKA')
+    others: (transaction) => transaction.description.toUpperCase().includes('ZABKA') || transaction.description.toUpperCase().includes('CARREFOUR')
   };
 
   public getGroceries(transactions: Transaction[]): CategorisationResult<Groceries> {
@@ -23,7 +23,7 @@ export class GroceriesService extends CategorizationBaseService<Groceries> {
       lidl: [],
       kaufland: [],
       dino: [],
-      zabka: []
+      others: []
     };
 
     return this.categorize(transactions, initialData);
