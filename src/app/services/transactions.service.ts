@@ -33,6 +33,23 @@ export class TransactionsService {
     filter(transactions => transactions.length > 0),
     map(transactions => this.helperService.getSectionTotal(transactions)),
   )
+  
+  // Add income, expenses and balance observables
+  income$ = this.transactions$.pipe(
+    map(transactions => this.calculateIncome(transactions)),
+    shareReplay(1)
+  );
+  
+  expenses$ = this.transactions$.pipe(
+    map(transactions => this.calculateExpenses(transactions)),
+    shareReplay(1)
+  );
+  
+  balance$ = this.transactions$.pipe(
+    map(transactions => this.calculateBalance(transactions)),
+    shareReplay(1)
+  );
+  
   fixedCost$ = this.baseCategories$.pipe(map(state => state.fixedCost), distinctUntilChanged() ,filter(fixedCost => fixedCost !== undefined));
   transport$ = this.baseCategories$.pipe(map(state => state.transport), distinctUntilChanged() ,filter(transport => transport !== undefined));
   groceries$ = this.baseCategories$.pipe(map(state => state.groceries), distinctUntilChanged() ,filter(groceries => groceries !== undefined));
@@ -79,6 +96,23 @@ export class TransactionsService {
         this._baseCategories$.next(categories);
       }
     });
+  }
+
+  // Add helper methods for calculations
+  private calculateIncome(transactions: Transaction[]): number {
+    return transactions
+      .filter(transaction => transaction.amount > 0)
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+  }
+  
+  private calculateExpenses(transactions: Transaction[]): number {
+    return Math.abs(transactions
+      .filter(transaction => transaction.amount < 0)
+      .reduce((sum, transaction) => sum + transaction.amount, 0));
+  }
+  
+  private calculateBalance(transactions: Transaction[]): number {
+    return transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
   }
 
   async processTransactionsFromFile(file: any): Promise<void> {
@@ -145,7 +179,15 @@ export class TransactionsService {
   generateExcelExport(): string {
     const baseCategories = this._baseCategories$.getValue();
     const customCategories = this._customCategories$.getValue();
+    const transactions = this._transactions$.getValue();
     let excelText = '';
+    
+    // Add summary section at the top
+    const income = this.calculateIncome(transactions);
+    const expenses = this.calculateExpenses(transactions);
+    const balance = this.calculateBalance(transactions);
+    
+    excelText += 'CATEGORIES\n';
 
     // Process base categories
     if (baseCategories.fixedCost) {
@@ -176,6 +218,11 @@ export class TransactionsService {
         excelText += `${category}\t${this.helperService.getSectionTotal(transactions)}\n`;
       }
     }
+
+    excelText += 'TRANSACTION SUMMARY\n';
+    excelText += `Total Income\t${income}\n`;
+    excelText += `Total Expenses\t${expenses}\n`;
+    excelText += `Balance\t${balance}\n\n`;
 
     return excelText;
   }

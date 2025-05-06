@@ -1,0 +1,19 @@
+<div class="summary-container">
+  <h2 class="summary-title">Transaction Summary</h2>
+  <div class="summary-grid">
+    <div class="summary-item income">
+      <h3>Total Income</h3>
+      <div class="amount positive">{{ (income$ | async) ?? 0 | price }}</div>
+    </div>
+    <div class="summary-item expenses">
+      <h3>Total Expenses</h3>
+      <div class="amount negative">{{ (expenses$ | async) ?? 0 | price }}</div>
+    </div>
+    <div class="summary-item balance">
+      <h3>Balance</h3>
+      <div class="amount" [ngClass]="((balance$ | async) ?? 0) >= 0 ? 'positive' : 'negative'">
+        {{ (balance$ | async) ?? 0 | price }}
+      </div>
+    </div>
+  </div>
+</div>

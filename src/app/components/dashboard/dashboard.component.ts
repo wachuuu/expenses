@@ -5,6 +5,7 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
 import { BaseCategoriesComponent } from '../categories/base-categories/base-categories.component';
 import { CustomCategoriesComponent } from '../categories/custom-categories/custom-categories.component';
 import { ExcelExportComponent } from '../export/excel-export/excel-export.component';
+import { TransactionSummaryComponent } from '../transaction-summary/transaction-summary.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,8 @@ import { ExcelExportComponent } from '../export/excel-export/excel-export.compon
     CategoryFormComponent,
     BaseCategoriesComponent,
     CustomCategoriesComponent,
-    ExcelExportComponent
+    ExcelExportComponent,
+    TransactionSummaryComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
