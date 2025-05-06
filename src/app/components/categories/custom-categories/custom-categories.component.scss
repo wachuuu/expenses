@@ -1,3 +1,74 @@
 @import '../shared/category-styles.scss';
 
 // Any additional custom category-specific styles can go here
+
+.categories-container {
+  // ...existing code...
+  
+  .categories-table {
+    // ...existing code...
+    
+    th {
+      font-family: var(--primary-font);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-base);
+      // ...existing code...
+    }
+    
+    td {
+      font-family: var(--primary-font);
+      font-size: var(--font-size-base);
+      // ...existing code...
+    }
+  }
+  
+  // Any custom-categories specific overrides
+}
+
+// Add deletion confirmation styling that matches the overall design
+.delete-confirmation {
+  padding: 8px 12px;
+  background-color: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 4px;
+  margin: 5px 0;
+  
+  p {
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    color: #e65100;
+    margin: 0 0 8px 0;
+  }
+  
+  .confirmation-actions {
+    display: flex;
+    gap: 8px;
+    
+    button {
+      font-family: var(--primary-font);
+      font-size: var(--font-size-small);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      
+      &.confirm {
+        background-color: #f44336;
+        color: white;
+        
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+      
+      &.cancel {
+        background-color: #e0e0e0;
+        color: #424242;
+        
+        &:hover {
+          background-color: #bdbdbd;
+        }
+      }
+    }
+  }
+}

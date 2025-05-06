@@ -1,8 +1,13 @@
 <div *ngIf="baseCategories$ | async as categories" class="categories-container">
+  <div class="category-header">
+    <h2>Base Categories</h2>
+    <p class="description">Your transaction data organized by default categories</p>
+  </div>
+  
   <table class="categories-table">
     <thead>
       <tr>
-        <th class="category-column">Base categories</th>
+        <th class="category-column">Category</th>
         <th class="total-column">Total</th>
         <th class="actions-column">Actions</th>
       </tr>

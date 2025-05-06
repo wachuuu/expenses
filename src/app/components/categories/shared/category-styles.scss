@@ -1,6 +1,31 @@
 // Main category container styling
 .categories-container {
   overflow-x: auto;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 20px;
+  
+  .category-header {
+    margin-bottom: 15px;
+    
+    h2 {
+      font-family: var(--primary-font);
+      font-size: var(--font-size-large);
+      font-weight: var(--font-weight-bold);
+      margin: 0 0 5px;
+      color: #333;
+    }
+    
+    .description {
+      font-family: var(--primary-font);
+      font-size: var(--font-size-base);
+      color: #666;
+      margin: 0;
+    }
+  }
 }
 
 // Main categories table styling
@@ -9,10 +34,14 @@
   border-collapse: separate; // Changed from collapse to separate for spacing
   border-spacing: 0 12px; // Increased vertical spacing between rows
   table-layout: fixed;
+  margin-top: 10px;
   
   th, td {
     padding: 0.85rem 1rem; // Reduced vertical padding, kept horizontal
     border: 1px solid #e0e0e0;
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    padding: 12px 15px;
   }
   
   th {
@@ -20,6 +49,23 @@
     font-weight: bold;
     text-align: left;
     border-bottom: 2px solid #ddd; // Stronger bottom border for header
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: #555;
+    padding: 12px 15px;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    
+    &:first-child {
+      border-left: 1px solid #e0e0e0;
+      border-top-left-radius: 4px;
+    }
+    
+    &:last-child {
+      border-right: 1px solid #e0e0e0;
+      border-top-right-radius: 4px;
+    }
   }
   
   .category-column {
@@ -49,7 +95,9 @@
     h3 {
       margin: 0;
       color: #333;
-      font-size: 1.1rem;
+      font-family: var(--primary-font);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
       text-transform: capitalize;
       padding: 0.25rem 0; // Vertical padding within heading
     }
@@ -154,6 +202,9 @@
     text-align: left;
     border-bottom: 2px solid #ddd; // Stronger bottom border
     padding: 0.75rem 0.85rem; // Slightly reduced vertical padding for headers
+    font-family: var(--primary-font);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
   }
   
   tr:nth-child(even) {
@@ -222,6 +273,8 @@
       border-radius: 4px;
       border: 1px solid #ccc;
       min-height: 30px; // Ensure consistent minimum height
+      font-family: var(--primary-font);
+      font-size: var(--font-size-small);
     }
     
     button {
@@ -233,6 +286,8 @@
       background-color: #f0f0f0;
       min-height: 30px; // Ensure consistent minimum height
       white-space: nowrap; // Prevent button text from wrapping
+      font-family: var(--primary-font);
+      font-size: var(--font-size-small);
     }
   }
 }
@@ -244,6 +299,8 @@ button {
   border-radius: 4px;
   border: 1px solid #ccc;
   background-color: #f0f0f0;
+  font-family: var(--primary-font);
+  font-size: var(--font-size-small);
   
   &:hover {
     background-color: #e5e5e5;
@@ -291,13 +348,56 @@ button {
   padding: 12px 16px; // Increased padding
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  
+  h4 {
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: #555;
+  }
 }
 
 .subscription-header {
   margin-bottom: 10px; // Increased margin
   margin-top: 10px; // Added top margin
+  
+  h5 {
+    font-family: var(--primary-font);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-medium);
+    color: #666;
+  }
 }
 
 .subcategory-transactions {
   margin-bottom: 20px; // Increased margin
+}
+
+// Shared styles for category actions
+.category-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: #757575;
+    }
+  }
 }

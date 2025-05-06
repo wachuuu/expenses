@@ -12,7 +12,9 @@
   h3 {
     margin: 0;
     color: #333;
-    font-size: 1.1rem;
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
     text-transform: capitalize;
     padding: 0.2rem 0; // Reduced vertical padding inside the heading
   }
@@ -63,6 +65,19 @@
   &:hover::after {
     background-color: rgba(0, 0, 0, 0.02);
   }
+
+  .category-name {
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .category-total {
+    font-family: var(--primary-font);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: #424242;
+  }
 }
 
 // Ensure the button retains its clickable appearance
@@ -70,4 +85,6 @@
   cursor: pointer;
   position: relative;
   z-index: 1; // Ensure the button is above the row hover effect
+  font-family: var(--primary-font);
+  font-size: var(--font-size-small);
 }
