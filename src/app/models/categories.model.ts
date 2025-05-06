@@ -3,7 +3,7 @@ import { Groceries } from "./categories/groceries.model";
 import { Transport } from "./categories/transport.model";
 import { Transaction } from "./transaction.model";
 
-export interface Categories {
+export interface BaseCategories {
   fixedCost?: FixedCost;
   groceries?: Groceries;
   transport?: Transport;
@@ -11,4 +11,8 @@ export interface Categories {
   cardPayments?: Transaction[];
   onlinePayments?: Transaction[];
   other: Transaction[];
+}
+
+export interface CustomCategories {
+  [key: string]: Transaction[];
 }

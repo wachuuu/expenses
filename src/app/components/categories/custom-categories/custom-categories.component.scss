@@ -1,0 +1,61 @@
+.categories-container {
+  margin: 20px;
+}
+
+.categories-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.category-column {
+  width: 40%;
+}
+
+.total-column,
+.actions-column {
+  width: 30%;
+  text-align: center;
+}
+
+.category-row {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+.category-row h3 {
+  margin-left: 10px;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.transactions-container {
+  padding: 0;
+}
+
+.transactions-wrapper {
+  margin-left: 20px;
+  border-left: 2px solid #ccc;
+  padding-left: 10px;
+}
+
+.transactions-table {
+  margin-top: 10px;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.date-column {
+  width: 25%;
+}
+
+.type-column,
+.description-column,
+.amount-column {
+  width: 25%;
+  text-align: center;
+}

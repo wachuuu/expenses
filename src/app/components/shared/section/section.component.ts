@@ -4,6 +4,7 @@ import { Transaction } from '../../../models/transaction.model';
 import { PricePipe } from "../../../pipes/price.pipe";
 import { HelperService } from '../../../services/shared/helper.service';
 import { TransactionsService } from '../../../services/transactions.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-section',
@@ -23,18 +24,17 @@ export class SectionComponent {
   @Input() title: string = 'Transactions';
   total: number = 0;
   showTransactions: boolean = false;
+  customCategories: Observable<string[]>;
 
-  constructor(private helperService: HelperService, private transactionService: TransactionsService) { }
+  constructor(private helperService: HelperService, private transactionService: TransactionsService) {
+    this.customCategories = this.transactionService.getCustomCategoriesNames();
+  }
 
   showOrHideTransactions() {
     this.showTransactions = !this.showTransactions
   }
 
-  transferToNonEssentials(transaction: Transaction) {
-    this.transactionService.transferToNonEssentialTransactions(transaction);
-  }
-
-  transferToExcluded(transaction: Transaction) {
-    this.transactionService.transferToExcludedTransactions(transaction);
+  addToCategory(category: string, transaction: Transaction) {
+    this.transactionService.addTransactionToCustomCategory(category, transaction)
   }
 }

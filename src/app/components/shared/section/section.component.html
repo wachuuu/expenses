@@ -7,9 +7,8 @@
   <ul *ngIf="showTransactions">
     <li *ngFor="let item of transactions">
       <div class="item">
-        <p>{{ item.recipientOrSender }} - {{ item.description }}: {{ item.amount }}</p>
-        <button (click)="transferToNonEssentials(item)">Dodaj do zbędnych</button>
-        <button (click)="transferToExcluded(item)">Wyłącz z analizy</button>
+        <p>{{ item.recipientOrSender }} {{ item.recipientOrSender ? ' - ' : '' }} {{ item.description }}: {{ item.amount }}</p>
+        <button *ngFor="let category of customCategories | async" (click)="addToCategory(category, item)">Dodaj do {{ category }}</button>
       </div>
     </li>
   </ul>
