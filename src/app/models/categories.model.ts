@@ -7,6 +7,7 @@ export interface BaseCategories {
   fixedCost?: FixedCost;
   groceries?: Groceries;
   transport?: Transport;
+  transferedSavings?: Transaction[];
   mobilePayments?: Transaction[];
   cardPayments?: Transaction[];
   onlinePayments?: Transaction[];

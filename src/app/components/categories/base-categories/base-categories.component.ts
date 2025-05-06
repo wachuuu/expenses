@@ -63,6 +63,7 @@ export class BaseCategoriesComponent extends BaseCategoryComponent {
     if (categoryKey === 'mobilePayments') return 'Płatności mobilne / BLIK';
     if (categoryKey === 'cardPayments') return 'Płatności kartą';
     if (categoryKey === 'onlinePayments') return 'Płatności intenetowe';
+    if (categoryKey === 'transferedSavings') return 'Przelewy oszczędnościowe';
     if (categoryKey === 'other') return 'Inne';
     return categoryKey.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w/, c => c.toUpperCase());
   }

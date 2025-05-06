@@ -7,6 +7,7 @@ import { FixedCostService } from './categories/fixed-cost.service';
 import { GroceriesService } from './categories/groceries.service';
 import { MobilePaymentsService } from './categories/mobile-payments.service';
 import { OnlinePaymentsService } from './categories/online-payments.service';
+import { TransferredSavingsService } from './categories/transferred-savings.service';
 import { TransportService } from './categories/transport.service';
 import { FileParserService } from './file-parser.service';
 import { HelperService } from './shared/helper.service';
@@ -34,7 +35,6 @@ export class TransactionsService {
     map(transactions => this.helperService.getSectionTotal(transactions)),
   )
   
-  // Add income, expenses and balance observables
   income$ = this.transactions$.pipe(
     map(transactions => this.calculateIncome(transactions)),
     shareReplay(1)
@@ -53,6 +53,7 @@ export class TransactionsService {
   fixedCost$ = this.baseCategories$.pipe(map(state => state.fixedCost), distinctUntilChanged() ,filter(fixedCost => fixedCost !== undefined));
   transport$ = this.baseCategories$.pipe(map(state => state.transport), distinctUntilChanged() ,filter(transport => transport !== undefined));
   groceries$ = this.baseCategories$.pipe(map(state => state.groceries), distinctUntilChanged() ,filter(groceries => groceries !== undefined));
+  transferedSavings$ = this.baseCategories$.pipe(map(state => state.transferedSavings), distinctUntilChanged(), filter(savings => savings !== undefined));
 
   constructor(
     private fileParserService: FileParserService,
@@ -61,6 +62,7 @@ export class TransactionsService {
     private fixedCostService: FixedCostService,
     private groceriesService: GroceriesService,
     private transportService: TransportService,
+    private transferredSavingsService: TransferredSavingsService,
     private mobilePaymentsService: MobilePaymentsService,
     private cardPaymentsService: CardPaymentsService,
     private onlinePaymentsService: OnlinePaymentsService
@@ -73,7 +75,8 @@ export class TransactionsService {
         const fixedCost = this.fixedCostService.getFixedCost(transactions);
         const groceries = this.groceriesService.getGroceries(fixedCost.remainingTransactions);
         const transport = this.transportService.getTransport(groceries.remainingTransactions);
-        const mobilePayments = this.mobilePaymentsService.getMobilePayments(transport.remainingTransactions);
+        const transferredSavings = this.transferredSavingsService.getTransferredSavings(transport.remainingTransactions);
+        const mobilePayments = this.mobilePaymentsService.getMobilePayments(transferredSavings.remainingTransactions);
         const cardPayments = this.cardPaymentsService.getCardPayments(mobilePayments.remainingTransactions);
         const onlinePayments = this.onlinePaymentsService.getOnlinePayments(cardPayments.remainingTransactions);
   
@@ -81,6 +84,7 @@ export class TransactionsService {
           fixedCost: fixedCost.categorizedData, 
           groceries: groceries.categorizedData,
           transport: transport.categorizedData,
+          transferedSavings: transferredSavings.categorizedData,
           mobilePayments: mobilePayments.categorizedData,
           cardPayments: cardPayments.categorizedData,
           onlinePayments: onlinePayments.categorizedData,
