@@ -1,0 +1,26 @@
+<table class="transactions-table">
+  <thead>
+    <tr>
+      <th class="date-column">Date</th>
+      <th class="type-column">Type</th>
+      <th class="description-column">Description</th>
+      <th class="amount-column">Amount</th>
+      <th class="transaction-actions-column">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let transaction of transactions" class="transaction-row">
+      <td>{{ transaction.date }}</td>
+      <td class="center-text">{{ transaction.type }}</td>
+      <td class="center-text description-cell">{{ transaction.description }}</td>
+      <td class="center-text">
+        <span [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
+          {{ transaction.amount | number:'1.2-2' }} PLN
+        </span>
+      </td>
+      <td class="actions-cell">
+        <ng-container *ngTemplateOutlet="actionTemplate; context: { $implicit: transaction, category: categoryKey }"></ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>

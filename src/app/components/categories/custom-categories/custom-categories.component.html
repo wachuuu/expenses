@@ -2,61 +2,29 @@
   <table class="categories-table">
     <thead>
       <tr>
-        <th class="category-column">Category</th>
+        <th class="category-column">Custom Category</th>
         <th class="total-column">Total</th>
         <th class="actions-column">Actions</th>
       </tr>
     </thead>
     <tbody>
+      <!-- Use ng-container and shared components for each category -->
       <ng-container *ngFor="let categoryKey of getCategoryKeys(categories)">
-        <tr class="category-row">
-          <!-- Category Header -->
-          <td>
-            <h3>{{ categoryKey }}</h3>
-          </td>
-          <td class="center-text">
-            <span [ngStyle]="{ color: helperService.getCategoryTotal(categories[categoryKey]) > 0 ? 'green' : 'red' }">
-              {{ helperService.getCategoryTotal(categories[categoryKey]) | number:'1.2-2' }} PLN
-            </span>
-          </td>
-          <td class="center-text">
-            <button (click)="toggleTransactions(categoryKey)">Show details</button>
-          </td>
-        </tr>
+        <app-category-row
+          [categoryName]="categoryKey"
+          [total]="getCategoryTotal(categories, categoryKey)"
+          [isExpanded]="expandedCategories[categoryKey]"
+          (toggleExpand)="toggleTransactions(categoryKey)">
+        </app-category-row>
+        
         <tr *ngIf="expandedCategories[categoryKey]">
           <td colspan="3" class="transactions-container">
             <div class="transactions-wrapper">
-              <!-- Transactions Table -->
-              <table class="transactions-table">
-                <thead>
-                  <tr>
-                    <th class="date-column">Date</th>
-                    <th class="type-column">Type</th>
-                    <th class="description-column">Description</th>
-                    <th class="amount-column">Amount</th>
-                    <th class="transaction-actions-column">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let transaction of categories[categoryKey]">
-                    <td>{{ transaction.date }}</td>
-                    <td class="center-text">{{ transaction.type }}</td>
-                    <td class="center-text">{{ transaction.description }}</td>
-                    <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                      {{ transaction.amount | number:'1.2-2' }} PLN
-                    </td>
-                    <td class="actions-cell">
-                      <select (change)="moveTransaction(categoryKey, transaction, $event)">
-                        <option [value]="''" disabled selected>Move to...</option>
-                        <option *ngFor="let targetCategory of getCategoryKeys(categories)" [value]="targetCategory" [disabled]="targetCategory === categoryKey">
-                          {{ targetCategory }}
-                        </option>
-                      </select>
-                      <button class="delete-btn" (click)="deleteTransaction(categoryKey, transaction)">Delete</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <app-transaction-table
+                [transactions]="getTransactionsForCategory(categories, categoryKey)"
+                [actionTemplate]="customActionsTemplate"
+                [categoryKey]="categoryKey">
+              </app-transaction-table>
             </div>
           </td>
         </tr>
@@ -64,3 +32,17 @@
     </tbody>
   </table>
 </div>
+
+<ng-template #customActionsTemplate let-transaction let-categoryKey="category">
+  <div class="custom-actions">
+    <select (change)="moveTransaction(categoryKey, transaction, $event)">
+      <option [value]="categoryKey" disabled selected>Move to category...</option>
+      <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
+              [value]="customCategory"
+              [disabled]="customCategory === categoryKey">
+        {{ customCategory }}
+      </option>
+    </select>
+    <button (click)="deleteTransaction(categoryKey, transaction)" class="delete-btn">Delete</button>
+  </div>
+</ng-template>

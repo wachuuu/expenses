@@ -1,128 +1,75 @@
 <ng-container *ngIf="fixedCost$ | async as fixedCost">
-  <!-- Fixed Cost Header Row (Match the style of regular categories) -->
-  <tr class="category-row">
-    <td>
-      <h3>fixedCost</h3>
-    </td>
-    <td class="center-text">
-      <span [ngStyle]="{ color: getTotalFixedCost(fixedCost) > 0 ? 'green' : 'red' }">
-        {{ getTotalFixedCost(fixedCost) | number:'1.2-2' }} PLN
-      </span>
-    </td>
-    <td class="center-text">
-      <button (click)="toggleMainCategory()">{{ isMainCategoryExpanded ? 'Hide' : 'Show' }} details</button>
-    </td>
-  </tr>
+  <!-- Fixed Cost Header Row using the shared category-row component -->
+  <app-category-row
+    categoryName="Fixed Costs"
+    [total]="getTotalFixedCost(fixedCost)"
+    [isExpanded]="isMainCategoryExpanded"
+    (toggleExpand)="toggleMainCategory()">
+  </app-category-row>
   
   <!-- Fixed Cost Expanded Details -->
-  <tr *ngIf="isMainCategoryExpanded">
+  <tr *ngIf="isMainCategoryExpanded" class="expanded-row">
     <td colspan="3" class="transactions-container">
       <div class="transactions-wrapper fixed-cost-wrapper">
         <ng-container *ngFor="let subCategory of getFixedCostSubcategories(fixedCost)">
           <!-- Rent and Internet sections -->
           <ng-container *ngIf="subCategory !== 'subscriptions'">
-            <div class="subcategory-header">
+            <div class="subcategory-header clickable" (click)="toggleSubcategory(subCategory)" [class.expanded]="expandedCategories[subCategory]">
               <div class="subcategory-title">
                 <h4>{{ subCategory }}</h4>
                 <span [ngStyle]="{ color: getFixedCostSubcategoryTotal(fixedCost, subCategory) > 0 ? 'green' : 'red' }">
                   {{ getFixedCostSubcategoryTotal(fixedCost, subCategory) | number:'1.2-2' }} PLN
                 </span>
               </div>
-              <button (click)="toggleSubcategory(subCategory)">
-                {{ expandedCategories[subCategory] ? 'Hide' : 'Show' }} transactions
+              <button (click)="$event.stopPropagation(); toggleSubcategory(subCategory)" class="toggle-btn">
+                {{ expandedCategories[subCategory] ? 'Hide transactions' : 'Show transactions' }}
               </button>
             </div>
             
             <div *ngIf="expandedCategories[subCategory]" class="subcategory-transactions">
-              <table class="transactions-table">
-                <thead>
-                  <tr>
-                    <th class="date-column">Date</th>
-                    <th class="type-column">Type</th>
-                    <th class="description-column">Description</th>
-                    <th class="amount-column">Amount</th>
-                    <th class="transaction-actions-column">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let transaction of getFixedCostTransactions(fixedCost, subCategory)">
-                    <td>{{ transaction.date }}</td>
-                    <td class="center-text">{{ transaction.type }}</td>
-                    <td class="center-text">{{ transaction.description }}</td>
-                    <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                      {{ transaction.amount | number:'1.2-2' }} PLN
-                    </td>
-                    <td class="actions-cell">
-                      <select (change)="moveToCustomCategory(transaction, $event)">
-                        <option [value]="''" disabled selected>Move to custom category...</option>
-                        <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
-                                [value]="customCategory">
-                          {{ customCategory }}
-                        </option>
-                      </select>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <!-- Use shared transaction table component -->
+              <app-transaction-table
+                [transactions]="getFixedCostTransactions(fixedCost, subCategory)"
+                [actionTemplate]="moveToCustomTemplate"
+                [categoryKey]="subCategory">
+              </app-transaction-table>
             </div>
           </ng-container>
           
           <!-- Subscriptions section -->
           <ng-container *ngIf="subCategory === 'subscriptions' && fixedCost?.subscriptions">
-            <div class="subcategory-header">
+            <div class="subcategory-header clickable" (click)="toggleSubcategory(subCategory)" [class.expanded]="expandedCategories[subCategory]">
               <div class="subcategory-title">
                 <h4>Subscriptions</h4>
               </div>
-              <button (click)="toggleSubcategory(subCategory)">
-                {{ expandedCategories[subCategory] ? 'Hide' : 'Show' }} details
+              <button (click)="$event.stopPropagation(); toggleSubcategory(subCategory)" class="toggle-btn">
+                {{ expandedCategories[subCategory] ? 'Hide details' : 'Show details' }}
               </button>
             </div>
             
             <div *ngIf="expandedCategories[subCategory]" class="subscriptions-list">
               <ng-container *ngFor="let subscriptionKey of getSubscriptionKeys(fixedCost?.subscriptions || {})">
-                <div class="subscription-header">
+                <div class="subscription-header clickable" 
+                     (click)="toggleSubcategory('subscription_' + subscriptionKey)"
+                     [class.expanded]="expandedCategories['subscription_' + subscriptionKey]">
                   <div class="subscription-title">
                     <h5>{{ subscriptionKey }}</h5>
                     <span [ngStyle]="{ color: getSubscriptionTotal(fixedCost?.subscriptions || {}, subscriptionKey) > 0 ? 'green' : 'red' }">
                       {{ getSubscriptionTotal(fixedCost?.subscriptions || {}, subscriptionKey) | number:'1.2-2' }} PLN
                     </span>
                   </div>
-                  <button (click)="toggleSubcategory('subscription_' + subscriptionKey)">
-                    {{ expandedCategories['subscription_' + subscriptionKey] ? 'Hide' : 'Show' }} transactions
+                  <button (click)="$event.stopPropagation(); toggleSubcategory('subscription_' + subscriptionKey)" class="toggle-btn">
+                    {{ expandedCategories['subscription_' + subscriptionKey] ? 'Hide transactions' : 'Show transactions' }}
                   </button>
                 </div>
                 
                 <div *ngIf="expandedCategories['subscription_' + subscriptionKey]" class="subcategory-transactions">
-                  <table class="transactions-table">
-                    <thead>
-                      <tr>
-                        <th class="date-column">Date</th>
-                        <th class="type-column">Type</th>
-                        <th class="description-column">Description</th>
-                        <th class="amount-column">Amount</th>
-                        <th class="transaction-actions-column">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let transaction of getSubscriptionTransactions(fixedCost?.subscriptions || {}, subscriptionKey)">
-                        <td>{{ transaction.date }}</td>
-                        <td class="center-text">{{ transaction.type }}</td>
-                        <td class="center-text">{{ transaction.description }}</td>
-                        <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                          {{ transaction.amount | number:'1.2-2' }} PLN
-                        </td>
-                        <td class="actions-cell">
-                          <select (change)="moveToCustomCategory(transaction, $event)">
-                            <option [value]="''" disabled selected>Move to custom category...</option>
-                            <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
-                                    [value]="customCategory">
-                              {{ customCategory }}
-                            </option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <!-- Use shared transaction table component -->
+                  <app-transaction-table
+                    [transactions]="getSubscriptionTransactions(fixedCost?.subscriptions || {}, subscriptionKey)"
+                    [actionTemplate]="moveToCustomTemplate"
+                    [categoryKey]="'subscription_' + subscriptionKey">
+                  </app-transaction-table>
                 </div>
               </ng-container>
             </div>
@@ -132,3 +79,14 @@
     </td>
   </tr>
 </ng-container>
+
+<!-- Template for the move to custom category action -->
+<ng-template #moveToCustomTemplate let-transaction>
+  <select (change)="moveToCustomCategory(transaction, $event)">
+    <option [value]="''" disabled selected>Move to custom category...</option>
+    <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
+            [value]="customCategory">
+      {{ customCategory }}
+    </option>
+  </select>
+</ng-template>

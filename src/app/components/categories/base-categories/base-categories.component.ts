@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TransactionsService } from '../../../services/transactions.service';
 import { Observable } from 'rxjs';
 import { BaseCategories } from '../../../models/categories.model';
@@ -6,25 +6,30 @@ import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../services/shared/helper.service';
 import { Transaction } from '../../../models/transaction.model';
 import { FixedCostComponent } from '../fixed-cost/fixed-cost.component';
+import { BaseCategoryComponent } from '../base-category/base-category.component';
+import { CategoryRowComponent } from '../category-row/category-row.component';
+import { TransactionTableComponent } from '../transaction-table/transaction-table.component';
 
 @Component({
   selector: 'app-base-categories',
-  imports: [CommonModule, FixedCostComponent],
+  standalone: true,
+  imports: [CommonModule, FixedCostComponent, CategoryRowComponent, TransactionTableComponent],
   templateUrl: './base-categories.component.html',
   styleUrl: './base-categories.component.scss'
 })
-export class BaseCategoriesComponent {
+export class BaseCategoriesComponent extends BaseCategoryComponent {
   baseCategories$: Observable<BaseCategories>;
-  expandedCategories: { [key: string]: boolean } = {};
+  @ViewChild('baseActionsTemplate') baseActionsTemplate!: TemplateRef<any>;
 
   constructor(
-    public transactionsService: TransactionsService,
-    public helperService: HelperService
+    public override transactionsService: TransactionsService,
+    public override helperService: HelperService
   ) {
+    super(transactionsService, helperService);
     this.baseCategories$ = this.transactionsService.baseCategories$;
   }
 
-  getCategoryKeys(categories: BaseCategories): string[] {
+  override getCategoryKeys(categories: BaseCategories): string[] {
     return Object.keys(categories).filter(key => {
       // Exclude fixedCost as it's handled separately now
       if (key === 'fixedCost') return false;
@@ -36,10 +41,6 @@ export class BaseCategoriesComponent {
     });
   }
 
-  toggleTransactions(categoryKey: string): void {
-    this.expandedCategories[categoryKey] = !this.expandedCategories[categoryKey];
-  }
-
   moveToCustomCategory(categoryKey: string, transaction: Transaction, event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const customCategory = selectElement.value;
@@ -49,16 +50,11 @@ export class BaseCategoriesComponent {
     }
   }
 
-  getTransactionsForCategory(categories: BaseCategories, categoryKey: string): Transaction[] {
+  override getTransactionsForCategory(categories: BaseCategories, categoryKey: string): Transaction[] {
     const category = categories[categoryKey as keyof BaseCategories];
     if (Array.isArray(category)) {
       return category as Transaction[];
     }
     return [];
-  }
-
-  getCategoryTotal(categories: BaseCategories, categoryKey: string): number {
-    const transactions = this.getTransactionsForCategory(categories, categoryKey);
-    return this.helperService.getSectionTotal(transactions);
   }
 }

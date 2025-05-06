@@ -2,7 +2,7 @@
   <table class="categories-table">
     <thead>
       <tr>
-        <th class="category-column">Category</th>
+        <th class="category-column">Base Category</th>
         <th class="total-column">Total</th>
         <th class="actions-column">Actions</th>
       </tr>
@@ -11,54 +11,23 @@
       <!-- FixedCost component as direct rows in the tbody -->
       <app-fixed-cost *ngIf="categories.fixedCost"></app-fixed-cost>
       
-      <!-- Regular category rows -->
+      <!-- Use ng-container and shared components for each category -->
       <ng-container *ngFor="let categoryKey of getCategoryKeys(categories)">
-        <tr class="category-row">
-          <td>
-            <h3>{{ categoryKey }}</h3>
-          </td>
-          <td class="center-text">
-            <span [ngStyle]="{ color: getCategoryTotal(categories, categoryKey) > 0 ? 'green' : 'red' }">
-              {{ getCategoryTotal(categories, categoryKey) | number:'1.2-2' }} PLN
-            </span>
-          </td>
-          <td class="center-text">
-            <button (click)="toggleTransactions(categoryKey)">Show details</button>
-          </td>
-        </tr>
+        <app-category-row
+          [categoryName]="categoryKey"
+          [total]="getCategoryTotal(categories, categoryKey)"
+          [isExpanded]="expandedCategories[categoryKey]"
+          (toggleExpand)="toggleTransactions(categoryKey)">
+        </app-category-row>
+        
         <tr *ngIf="expandedCategories[categoryKey]">
           <td colspan="3" class="transactions-container">
             <div class="transactions-wrapper">
-              <table class="transactions-table">
-                <thead>
-                  <tr>
-                    <th class="date-column">Date</th>
-                    <th class="type-column">Type</th>
-                    <th class="description-column">Description</th>
-                    <th class="amount-column">Amount</th>
-                    <th class="transaction-actions-column">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let transaction of getTransactionsForCategory(categories, categoryKey)">
-                    <td>{{ transaction.date }}</td>
-                    <td class="center-text">{{ transaction.type }}</td>
-                    <td class="center-text">{{ transaction.description }}</td>
-                    <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
-                      {{ transaction.amount | number:'1.2-2' }} PLN
-                    </td>
-                    <td class="actions-cell">
-                      <select (change)="moveToCustomCategory(categoryKey, transaction, $event)">
-                        <option [value]="''" disabled selected>Move to custom category...</option>
-                        <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
-                                [value]="customCategory">
-                          {{ customCategory }}
-                        </option>
-                      </select>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <app-transaction-table
+                [transactions]="getTransactionsForCategory(categories, categoryKey)"
+                [actionTemplate]="baseActionsTemplate"
+                [categoryKey]="categoryKey">
+              </app-transaction-table>
             </div>
           </td>
         </tr>
@@ -66,3 +35,13 @@
     </tbody>
   </table>
 </div>
+
+<ng-template #baseActionsTemplate let-transaction let-categoryKey="category">
+  <select (change)="moveToCustomCategory(categoryKey, transaction, $event)">
+    <option [value]="''" disabled selected>Move to custom category...</option>
+    <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
+            [value]="customCategory">
+      {{ customCategory }}
+    </option>
+  </select>
+</ng-template>

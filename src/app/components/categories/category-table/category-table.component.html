@@ -1,0 +1,50 @@
+<ng-container *ngFor="let categoryKey of getCategoryKeys(categories)">
+  <!-- Category header row -->
+  <tr class="category-row">
+    <td class="category-name">
+      <h3>{{ categoryKey }}</h3>
+    </td>
+    <td class="center-text total-value">
+      <span [ngStyle]="{ color: getCategoryTotal(categories, categoryKey) > 0 ? 'green' : 'red' }">
+        {{ getCategoryTotal(categories, categoryKey) | number:'1.2-2' }} PLN
+      </span>
+    </td>
+    <td class="center-text">
+      <button (click)="toggleTransactions(categoryKey)" class="toggle-btn">
+        {{ expandedCategories[categoryKey] ? 'Hide details' : 'Show details' }}
+      </button>
+    </td>
+  </tr>
+  
+  <!-- Expanded content row -->
+  <tr *ngIf="expandedCategories[categoryKey]" class="expanded-row">
+    <td colspan="3" class="transactions-container">
+      <div class="transactions-wrapper">
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th class="date-column">Date</th>
+              <th class="type-column">Type</th>
+              <th class="description-column">Description</th>
+              <th class="amount-column">Amount</th>
+              <th class="transaction-actions-column">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transaction of getTransactionsForCategory(categories, categoryKey)" class="transaction-row">
+              <td>{{ transaction.date }}</td>
+              <td class="center-text">{{ transaction.type }}</td>
+              <td class="center-text">{{ transaction.description }}</td>
+              <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
+                {{ transaction.amount | number:'1.2-2' }} PLN
+              </td>
+              <td class="actions-cell">
+                <ng-container *ngTemplateOutlet="actionTemplate; context: { $implicit: transaction, category: categoryKey }"></ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </td>
+  </tr>
+</ng-container>

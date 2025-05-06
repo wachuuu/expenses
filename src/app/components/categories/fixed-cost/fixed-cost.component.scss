@@ -1,3 +1,5 @@
+@import '../shared/category-styles.scss';
+
 :host {
   display: contents; // Make host display contents to seamlessly integrate with parent table
 }
@@ -5,45 +7,84 @@
 // Remove container and table styles that would create a separate structure
 // Keep only the nested element styles
 
-.subcategory-header {
+.subcategory-header, .subscription-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 10px;
-  background-color: #f0f0f0;
-  margin: 10px 0 5px 0;
+  padding: 10px 16px; // Reduced vertical padding
+  background-color: #f5f5f5;
   border-radius: 4px;
+  margin-bottom: 0.85rem; // Increased margin
+  margin-top: 0.85rem; // Added top margin
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05); // Add subtle shadow
+  cursor: pointer; // Add cursor pointer to indicate clickable
+  position: relative; // For hover effect
   
-  .subcategory-title {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+  &:hover {
+    background-color: #f0f0f0;
   }
   
-  h4 {
-    margin: 0;
-    text-transform: capitalize;
+  .subcategory-title, .subscription-title {
+    display: flex;
+    gap: 1.25rem; // Increased gap
+    align-items: center;
+    
+    h4, h5 {
+      margin: 0;
+      text-transform: capitalize;
+      font-weight: 500;
+      padding: 0.25rem 0; // Reduced padding
+    }
+  }
+  
+  &.clickable {
+    cursor: pointer;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      background-color: transparent;
+      transition: background-color 0.15s;
+    }
+    
+    &:hover::after {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    
+    &.expanded {
+      background-color: #efefef;
+      
+      &:hover::after {
+        background-color: rgba(0, 0, 0, 0.015);
+      }
+    }
   }
 }
 
 .subscription-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-  background-color: #f8f8f8;
-  margin: 5px 0 5px 15px;
-  border-radius: 4px;
+  background-color: #f9f9f9;
+  margin-left: 1.5rem; // Increased margin
+  margin-top: 1.25rem; // Increased top margin
+  padding: 8px 14px; // Reduced padding for nested headers
   
-  .subscription-title {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+  &:hover {
+    background-color: #f5f5f5;
   }
   
-  h5 {
-    margin: 0;
-    text-transform: capitalize;
+  .subscription-title h5 {
+    font-weight: normal;
+  }
+  
+  &.clickable {
+    &.expanded {
+      background-color: #f2f2f2;
+    }
   }
 }
 
@@ -161,15 +202,39 @@ select {
 }
 
 .fixed-cost-wrapper {
-  // No specific styling to match regular categories
+  max-height: none;
+  padding: 0.75rem; // Reduced padding
 }
 
 .subcategory-transactions {
   max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 15px;
+  margin-bottom: 2rem; // Increased margin
+  margin-left: 1rem; // Increased margin
+  margin-right: 1rem; // Increased margin
+  padding: 0.6rem; // Reduced padding
+  background-color: #fefefe; // Slightly different background
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.03); // Inner shadow
 }
 
 .subscriptions-list {
-  margin-left: 0; // No left margin for consistency
+  margin-left: 1rem; // Increased margin
+  margin-bottom: 1.5rem; // Increased margin
+  padding: 0.75rem; // Added padding
+}
+
+.toggle-btn {
+  padding: 6px 12px; // Consistent padding
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 2;
+  
+  &:hover {
+    background-color: #e5e5e5;
+  }
 }

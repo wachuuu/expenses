@@ -1,0 +1,305 @@
+// Main category container styling
+.categories-container {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+// Main categories table styling
+.categories-table {
+  width: 100%;
+  border-collapse: separate; // Changed from collapse to separate for spacing
+  border-spacing: 0 12px; // Increased vertical spacing between rows
+  margin-bottom: 20px;
+  table-layout: fixed;
+  
+  th, td {
+    padding: 0.85rem 1rem; // Reduced vertical padding, kept horizontal
+    border: 1px solid #e0e0e0;
+  }
+  
+  th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: 2px solid #ddd; // Stronger bottom border for header
+  }
+  
+  .category-column {
+    width: 40%;
+  }
+  
+  .total-column {
+    width: 30%;
+  }
+  
+  .actions-column {
+    width: 30%;
+  }
+  
+  .center-text {
+    text-align: center;
+  }
+
+  // Ensure category rows have distinct styling from transactions
+  .category-row {
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); // Add subtle shadow for depth
+    transition: background-color 0.2s ease;
+    position: relative; // Add position relative for ::after pseudo-element
+    cursor: pointer; // Add cursor pointer to indicate clickable
+    
+    h3 {
+      margin: 0;
+      color: #333;
+      font-size: 1.1rem;
+      text-transform: capitalize;
+      padding: 0.25rem 0; // Vertical padding within heading
+    }
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    
+    // Explicitly ensure rows are displayed as table rows
+    display: table-row;
+    
+    td {
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0.85rem 1rem; // Reduced vertical padding for category rows
+      
+      &:first-child {
+        border-left: 1px solid #e0e0e0;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+      
+      &:last-child {
+        border-right: 1px solid #e0e0e0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+    }
+
+    &.expanded {
+      background-color: #f0f0f0; // Different background for expanded state
+      
+      &:hover {
+        background-color: #e8e8e8;
+      }
+    }
+  }
+  
+  // Make sure the expanded row is displayed properly
+  tr.expanded-row {
+    display: table-row;
+    
+    td {
+      padding: 0.5rem 1rem; // Keep existing padding for expanded content
+      border-top: none; // Remove top border to connect with category row
+    }
+  }
+}
+
+// General clickable style for headers
+.clickable {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #f0f0f0;
+  }
+  
+  &.expanded {
+    background-color: #efefef;
+  }
+}
+
+// Transactions section styling
+.transactions-container {
+  padding: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.transactions-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 1rem; // Increased margin
+  padding: 0.5rem; // Added padding
+  border-radius: 4px;
+  border: 1px solid #eee;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); // Inner shadow for depth
+}
+
+// Transactions table styling
+.transactions-table {
+  width: 100%;
+  border-collapse: separate; // Changed to separate for consistent spacing
+  border-spacing: 0 6px; // Added row spacing for transaction tables
+  
+  th, td {
+    padding: 0.6rem 0.85rem; // Reduced vertical padding
+    border: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+    vertical-align: middle; // Center content vertically
+    word-break: break-word; // Allow text to break to avoid overflow
+    line-height: 1.4; // Improve readability for multi-line text
+  }
+  
+  th {
+    background-color: #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: left;
+    border-bottom: 2px solid #ddd; // Stronger bottom border
+    padding: 0.75rem 0.85rem; // Slightly reduced vertical padding for headers
+  }
+  
+  tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  tr:not(:last-child) {
+    border-bottom: 4px solid #fff; // Add space between transaction rows
+  }
+  
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  tr.transaction-row {
+    display: table-row;
+    
+    td {
+      // Add vertical padding to match the horizontal padding
+      padding: 0.6rem 0.85rem; // Reduced vertical padding
+      height: 100%; // Ensure equal height
+      
+      &:first-child {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+      }
+      
+      &:last-child {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
+    }
+  }
+  
+  .date-column {
+    width: 15%;
+  }
+  
+  .type-column {
+    width: 10%; 
+  }
+  
+  .description-column {
+    width: 30%;
+  }
+  
+  .amount-column {
+    width: 15%;
+  }
+  
+  .transaction-actions-column {
+    width: 30%;
+  }
+  
+  .actions-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center; // Center content vertically
+    gap: 8px; // Increased gap
+    height: 100%; // Take full height of the cell
+    min-height: 2.5rem; // Minimum height to ensure enough space
+    
+    select {
+      max-width: 100%;
+      padding: 5px; // Increased padding
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-height: 30px; // Ensure consistent minimum height
+    }
+    
+    button {
+      margin-left: 0.5rem;
+      cursor: pointer;
+      padding: 5px 10px; // Increased padding
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      min-height: 30px; // Ensure consistent minimum height
+      white-space: nowrap; // Prevent button text from wrapping
+    }
+  }
+}
+
+// Common button styling
+button {
+  cursor: pointer;
+  padding: 6px 12px; // Increased padding
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  
+  &:hover {
+    background-color: #e5e5e5;
+  }
+}
+
+// Specific styles for the delete button in custom categories
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+// Custom actions container
+.custom-actions {
+  display: flex;
+  gap: 0.75rem; // Increased gap
+  align-items: center;
+  flex-wrap: wrap; // Allow items to wrap when space is limited
+  width: 100%; // Take full width of cell
+  justify-content: center; // Center items in the cell
+}
+
+// Button styling consistency
+.toggle-btn {
+  padding: 6px 12px; // Increased padding
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #e5e5e5;
+  }
+}
+
+// Subcategory styling for fixed costs
+.subcategory-header {
+  margin-bottom: 14px; // Increased margin
+  margin-top: 14px; // Increased margin
+  padding: 12px 16px; // Increased padding
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.subscription-header {
+  margin-bottom: 10px; // Increased margin
+  margin-top: 10px; // Added top margin
+}
+
+.subcategory-transactions {
+  margin-bottom: 20px; // Increased margin
+}

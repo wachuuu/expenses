@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TransactionsService } from '../../../services/transactions.service';
 import { Observable } from 'rxjs';
 import { FixedCost } from '../../../models/categories/fixed-cost.model';
 import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../services/shared/helper.service';
 import { Transaction } from '../../../models/transaction.model';
+import { CategoryRowComponent } from '../category-row/category-row.component';
+import { TransactionTableComponent } from '../transaction-table/transaction-table.component';
 
 @Component({
   selector: 'app-fixed-cost',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, CategoryRowComponent, TransactionTableComponent],
   templateUrl: './fixed-cost.component.html',
   styleUrl: './fixed-cost.component.scss'
 })
@@ -16,6 +19,8 @@ export class FixedCostComponent {
   fixedCost$: Observable<FixedCost>;
   expandedCategories: { [key: string]: boolean } = {};
   isMainCategoryExpanded: boolean = false;
+
+  @ViewChild('moveToCustomTemplate') moveToCustomTemplate!: TemplateRef<any>;
 
   constructor(
     public transactionsService: TransactionsService, 
@@ -87,6 +92,9 @@ export class FixedCostComponent {
     return total;
   }
 
+  /**
+   * Toggles the expanded state of a subcategory or subscription
+   */
   toggleSubcategory(subCategory: string): void {
     this.expandedCategories[subCategory] = !this.expandedCategories[subCategory];
   }

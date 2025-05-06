@@ -1,34 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TransactionsService } from '../../../services/transactions.service';
 import { Observable } from 'rxjs';
 import { CustomCategories } from '../../../models/categories.model';
 import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../services/shared/helper.service';
 import { Transaction } from '../../../models/transaction.model';
+import { BaseCategoryComponent } from '../base-category/base-category.component';
+import { CategoryRowComponent } from '../category-row/category-row.component';
+import { TransactionTableComponent } from '../transaction-table/transaction-table.component';
 
 @Component({
   selector: 'app-custom-categories',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, CategoryRowComponent, TransactionTableComponent],
   templateUrl: './custom-categories.component.html',
   styleUrl: './custom-categories.component.scss'
 })
-export class CustomCategoriesComponent {
+export class CustomCategoriesComponent extends BaseCategoryComponent {
   customCategories$: Observable<CustomCategories>;
-  expandedCategories: { [key: string]: boolean } = {};
+  @ViewChild('customActionsTemplate') customActionsTemplate!: TemplateRef<any>;
 
   constructor(
-    private transactionsService: TransactionsService,
-    public helperService: HelperService
+    public override transactionsService: TransactionsService,
+    public override helperService: HelperService
   ) {
+    super(transactionsService, helperService);
     this.customCategories$ = this.transactionsService.customCategories$;
   }
 
-  getCategoryKeys(categories: CustomCategories): string[] {
+  override getCategoryKeys(categories: CustomCategories): string[] {
     return Object.keys(categories);
   }
 
-  toggleTransactions(categoryKey: string): void {
-    this.expandedCategories[categoryKey] = !this.expandedCategories[categoryKey];
+  override getTransactionsForCategory(categories: CustomCategories, categoryKey: string): Transaction[] {
+    return categories[categoryKey] || [];
   }
 
   moveTransaction(fromCategory: string, transaction: any, event: Event) {

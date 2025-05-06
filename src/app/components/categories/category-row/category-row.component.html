@@ -1,0 +1,15 @@
+<tr class="category-row" (click)="toggle()" [class.expanded]="isExpanded">
+  <td>
+    <h3>{{ categoryName }}</h3>
+  </td>
+  <td class="center-text">
+    <span [ngStyle]="{ color: total > 0 ? 'green' : 'red' }">
+      {{ total | number:'1.2-2' }} PLN
+    </span>
+  </td>
+  <td class="center-text">
+    <button (click)="toggleButtonClick($event)" class="toggle-btn">
+      {{ isExpanded ? 'Hide details' : 'Show details' }}
+    </button>
+  </td>
+</tr>
