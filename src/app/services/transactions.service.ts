@@ -9,6 +9,7 @@ import { MobilePaymentsService } from './categories/mobile-payments.service';
 import { OnlinePaymentsService } from './categories/online-payments.service';
 import { TransferredSavingsService } from './categories/transferred-savings.service';
 import { TransportService } from './categories/transport.service';
+import { ExportService } from './export.service';
 import { FileParserService } from './file-parser.service';
 import { HelperService } from './shared/helper.service';
 import { TransactionMapperService } from './transaction-mapper.service';
@@ -59,7 +60,8 @@ export class TransactionsService {
     private transferredSavingsService: TransferredSavingsService,
     private mobilePaymentsService: MobilePaymentsService,
     private cardPaymentsService: CardPaymentsService,
-    private onlinePaymentsService: OnlinePaymentsService
+    private onlinePaymentsService: OnlinePaymentsService,
+    private exportService: ExportService
   ) {
     this.transactions$.subscribe(this._baseCategoriesTransactions$);
 
@@ -181,50 +183,16 @@ export class TransactionsService {
     const baseCategories = this._baseCategories$.getValue();
     const customCategories = this._customCategories$.getValue();
     const transactions = this._transactions$.getValue();
-    let excelText = '';
-    
-    // Add summary section at the top
     const income = this.calculateIncome(transactions);
     const expenses = this.calculateExpenses(transactions);
     const balance = this.calculateBalance(transactions);
     
-    excelText += 'CATEGORIES\n';
-
-    // Process base categories
-    if (baseCategories.fixedCost) {
-      excelText += `Koszty stałe\t${this.helperService.getCategoryTotal(baseCategories.fixedCost)}\n`;
-    }
-    if (baseCategories.groceries) {
-      excelText += `Zakupy\t${this.helperService.getCategoryTotal(baseCategories.groceries)}\n`;
-    }
-    if (baseCategories.transport) {
-      excelText += `Transport\t${this.helperService.getCategoryTotal(baseCategories.transport)}\n`;
-    }
-    if (baseCategories.mobilePayments) {
-      excelText += `Płatności mobilne/BLIK\t${this.helperService.getSectionTotal(baseCategories.mobilePayments)}\n`;
-    }
-    if (baseCategories.cardPayments) {
-      excelText += `Płatności kartą\t${this.helperService.getSectionTotal(baseCategories.cardPayments)}\n`;
-    }
-    if (baseCategories.onlinePayments) {
-      excelText += `Płatności interentowe\t${this.helperService.getSectionTotal(baseCategories.onlinePayments)}\n`;
-    }
-    if (baseCategories.other?.length > 0) {
-      excelText += `Inne\t${this.helperService.getSectionTotal(baseCategories.other)}\n`;
-    }
-
-    // Process custom categories
-    for (const [category, transactions] of Object.entries(customCategories)) {
-      if (transactions.length > 0) {
-        excelText += `${category}\t${this.helperService.getSectionTotal(transactions)}\n`;
-      }
-    }
-
-    excelText += 'TRANSACTION SUMMARY\n';
-    excelText += `Total Income\t${income}\n`;
-    excelText += `Total Expenses\t${expenses}\n`;
-    excelText += `Balance\t${balance}\n\n`;
-
-    return excelText;
+    return this.exportService.generateExcelExport(
+      baseCategories, 
+      customCategories, 
+      income,
+      expenses,
+      balance
+    );
   }
 }
