@@ -1,0 +1,175 @@
+:host {
+  display: contents; // Make host display contents to seamlessly integrate with parent table
+}
+
+// Remove container and table styles that would create a separate structure
+// Keep only the nested element styles
+
+.subcategory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  margin: 10px 0 5px 0;
+  border-radius: 4px;
+  
+  .subcategory-title {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  h4 {
+    margin: 0;
+    text-transform: capitalize;
+  }
+}
+
+.subscription-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #f8f8f8;
+  margin: 5px 0 5px 15px;
+  border-radius: 4px;
+  
+  .subscription-title {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  h5 {
+    margin: 0;
+    text-transform: capitalize;
+  }
+}
+
+.fixed-cost-container {
+  margin: 20px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  
+  h3 {
+    margin: 0;
+    text-transform: capitalize;
+  }
+}
+
+.subcategories-container {
+  margin-left: 20px;
+}
+
+.transactions-wrapper {
+  margin-left: 15px;
+  margin-bottom: 15px;
+  max-height: none; // Remove specific height constraint for the wrapper
+  overflow-y: visible; // Allow natural flow for subcategories
+}
+
+.subscriptions-container {
+  margin-left: 15px;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-table th, .transactions-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.transactions-table th {
+  background-color: #eee;
+  position: sticky;
+  top: 0;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.date-column {
+  width: 15%;
+}
+
+.type-column {
+  width: 15%;
+}
+
+.description-column {
+  width: 30%;
+}
+
+.amount-column {
+  width: 20%;
+}
+
+.transaction-actions-column {
+  width: 20%;
+}
+
+button {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+}
+
+select {
+  padding: 3px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.categories-container {
+  margin: 0; // No margin to fit into base-categories layout
+}
+
+.categories-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.category-row {
+  background-color: #f5f5f5;
+}
+
+.transactions-container {
+  padding: 10px;
+  background-color: #fafafa;
+}
+
+.fixed-cost-wrapper {
+  // No specific styling to match regular categories
+}
+
+.subcategory-transactions {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.subscriptions-list {
+  margin-left: 0; // No left margin for consistency
+}

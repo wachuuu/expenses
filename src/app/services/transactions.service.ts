@@ -24,7 +24,7 @@ export class TransactionsService {
   baseCategoriesTransactions$ = this._baseCategoriesTransactions$.asObservable().pipe(shareReplay(1));
 
   private _baseCategories$ = new BehaviorSubject<BaseCategories>({ other: [] });
-  baseCategories$ = this._baseCategories$.asObservable().pipe(shareReplay(1));
+  baseCategories$ = this._baseCategories$.asObservable().pipe(tap(a => {console.log(a)}), shareReplay(1));
 
   private _customCategories$ = new BehaviorSubject<CustomCategories>({});
   customCategories$ = this._customCategories$.asObservable().pipe(shareReplay(1));

@@ -13,21 +13,15 @@ import { CommonModule } from '@angular/common';
 import { CardPaymentsComponent } from './components/categories/card-payments/card-payments.component';
 import { CategoryFormComponent } from "./components/category-form/category-form.component";
 import { CustomCategoriesComponent } from './components/categories/custom-categories/custom-categories.component';
+import { BaseCategoriesComponent } from './components/categories/base-categories/base-categories.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     CommonModule, 
     FileUploadComponent, 
-    FixedCostComponent, 
-    GroceriesComponent, 
-    TransportComponent, 
-    CardPaymentsComponent, 
-    OnlinePaymentsComponent, 
-    OthersComponent, 
-    MobilePaymentsComponent,
+    BaseCategoriesComponent,
     CustomCategoriesComponent, 
-    PricePipe, 
     CategoryFormComponent
   ],
   templateUrl: './app.component.html',
