@@ -1,6 +1,0 @@
-<div *ngIf="transport$ | async as transport">
-  <h3>Transport: {{ total | price }}</h3>
-  <app-section title="Paliwo" [transactions]="transport.fuel"></app-section>
-  <app-section title="Taksówki" [transactions]="transport.taxi"></app-section>
-  <app-section title="Bilety" [transactions]="transport.publicTransport"></app-section>
-</div>

@@ -1,19 +1,11 @@
-import { Component } from '@angular/core';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
-import { FixedCostComponent } from './components/categories/fixed-cost/fixed-cost.component';
-import { GroceriesComponent } from "./components/categories/groceries/groceries.component";
-import { TransportComponent } from "./components/categories/transport/transport.component";
-import { OnlinePaymentsComponent } from "./components/categories/online-payments/online-payments.component";
-import { OthersComponent } from "./components/categories/others/others.component";
-import { MobilePaymentsComponent } from "./components/categories/mobile-payments/mobile-payments.component";
-import { TransactionsService } from './services/transactions.service';
-import { Observable } from 'rxjs';
-import { PricePipe } from "./pipes/price.pipe";
 import { CommonModule } from '@angular/common';
-import { CardPaymentsComponent } from './components/categories/card-payments/card-payments.component';
-import { CategoryFormComponent } from "./components/category-form/category-form.component";
-import { CustomCategoriesComponent } from './components/categories/custom-categories/custom-categories.component';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { BaseCategoriesComponent } from './components/categories/base-categories/base-categories.component';
+import { CustomCategoriesComponent } from './components/categories/custom-categories/custom-categories.component';
+import { CategoryFormComponent } from "./components/category-form/category-form.component";
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { TransactionsService } from './services/transactions.service';
 
 @Component({
   selector: 'app-root',
