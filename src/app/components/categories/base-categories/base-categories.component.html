@@ -2,7 +2,7 @@
   <table class="categories-table">
     <thead>
       <tr>
-        <th class="category-column">Base Category</th>
+        <th class="category-column">Base categories</th>
         <th class="total-column">Total</th>
         <th class="actions-column">Actions</th>
       </tr>
@@ -20,7 +20,7 @@
       <!-- Use ng-container and shared components for each category -->
       <ng-container *ngFor="let categoryKey of getCategoryKeys(categories)">
         <app-category-row
-          [categoryName]="categoryKey"
+          [categoryName]="getCategoryName(categoryKey)"
           [total]="getCategoryTotal(categories, categoryKey)"
           [isExpanded]="expandedCategories[categoryKey]"
           (toggleExpand)="toggleTransactions(categoryKey)">

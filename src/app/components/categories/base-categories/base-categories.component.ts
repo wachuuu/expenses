@@ -59,6 +59,14 @@ export class BaseCategoriesComponent extends BaseCategoryComponent {
     }
   }
 
+  getCategoryName(categoryKey: string): string {
+    if (categoryKey === 'mobilePayments') return 'Płatności mobilne / BLIK';
+    if (categoryKey === 'cardPayments') return 'Płatności kartą';
+    if (categoryKey === 'onlinePayments') return 'Płatności intenetowe';
+    if (categoryKey === 'other') return 'Inne';
+    return categoryKey.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w/, c => c.toUpperCase());
+  }
+
   override getTransactionsForCategory(categories: BaseCategories, categoryKey: string): Transaction[] {
     const category = categories[categoryKey as keyof BaseCategories];
     if (Array.isArray(category)) {

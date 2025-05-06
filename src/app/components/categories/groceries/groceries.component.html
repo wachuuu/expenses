@@ -1,7 +1,7 @@
 <ng-container *ngIf="groceries$ | async as groceries">
   <!-- Groceries Header Row using the shared category-row component -->
   <app-category-row
-    categoryName="Groceries"
+    categoryName="Zakupy spożywcze"
     [total]="getTotalGroceries(groceries)"
     [isExpanded]="isMainCategoryExpanded"
     (toggleExpand)="toggleMainCategory()">

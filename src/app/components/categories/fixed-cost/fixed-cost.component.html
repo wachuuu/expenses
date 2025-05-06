@@ -1,7 +1,7 @@
 <ng-container *ngIf="fixedCost$ | async as fixedCost">
   <!-- Fixed Cost Header Row using the shared category-row component -->
   <app-category-row
-    categoryName="Fixed Costs"
+    categoryName="Koszty stałe"
     [total]="getTotalFixedCost(fixedCost)"
     [isExpanded]="isMainCategoryExpanded"
     (toggleExpand)="toggleMainCategory()">

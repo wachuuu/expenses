@@ -1,6 +1,5 @@
 // Main category container styling
 .categories-container {
-  margin: 1rem 0;
   overflow-x: auto;
 }
 
@@ -9,7 +8,6 @@
   width: 100%;
   border-collapse: separate; // Changed from collapse to separate for spacing
   border-spacing: 0 12px; // Increased vertical spacing between rows
-  margin-bottom: 20px;
   table-layout: fixed;
   
   th, td {
