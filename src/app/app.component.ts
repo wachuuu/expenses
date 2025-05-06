@@ -14,10 +14,4 @@ import { TransactionsService } from './services/transactions.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  total$: Observable<number>;
-  
-  constructor(private transactionsService: TransactionsService) {
-    this.total$ = this.transactionsService.total$;
-  }
-}
+export class AppComponent {}

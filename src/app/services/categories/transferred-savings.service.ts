@@ -14,7 +14,7 @@ export class TransferredSavingsService extends CategorizationBaseService<Transac
     return this.categorize(transactions, []);
   }
 
-  private isTransferredSaving(transaction: Transaction): boolean {
+  public isTransferredSaving(transaction: Transaction): boolean {
     return transaction.type === TransactionType.ACCOUNT_TRANSFER && 
     transaction.recipientOrSender === 'GABRIEL WACHOWSKI';
   }

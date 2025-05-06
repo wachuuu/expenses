@@ -29,11 +29,6 @@ export class TransactionsService {
 
   private _customCategories$ = new BehaviorSubject<CustomCategories>({});
   customCategories$ = this._customCategories$.asObservable().pipe(shareReplay(1));
-
-  total$ = this.transactions$.pipe(
-    filter(transactions => transactions.length > 0),
-    map(transactions => this.helperService.getSectionTotal(transactions)),
-  )
   
   income$ = this.transactions$.pipe(
     map(transactions => this.calculateIncome(transactions)),
@@ -53,7 +48,6 @@ export class TransactionsService {
   fixedCost$ = this.baseCategories$.pipe(map(state => state.fixedCost), distinctUntilChanged() ,filter(fixedCost => fixedCost !== undefined));
   transport$ = this.baseCategories$.pipe(map(state => state.transport), distinctUntilChanged() ,filter(transport => transport !== undefined));
   groceries$ = this.baseCategories$.pipe(map(state => state.groceries), distinctUntilChanged() ,filter(groceries => groceries !== undefined));
-  transferedSavings$ = this.baseCategories$.pipe(map(state => state.transferedSavings), distinctUntilChanged(), filter(savings => savings !== undefined));
 
   constructor(
     private fileParserService: FileParserService,
@@ -111,12 +105,15 @@ export class TransactionsService {
   
   private calculateExpenses(transactions: Transaction[]): number {
     return Math.abs(transactions
+      .filter(transaction => !this.transferredSavingsService.isTransferredSaving(transaction))
       .filter(transaction => transaction.amount < 0)
       .reduce((sum, transaction) => sum + transaction.amount, 0));
   }
   
   private calculateBalance(transactions: Transaction[]): number {
-    return transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+    return transactions
+      .filter(transaction => !this.transferredSavingsService.isTransferredSaving(transaction))
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
   }
 
   async processTransactionsFromFile(file: any): Promise<void> {
