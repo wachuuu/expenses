@@ -11,6 +11,12 @@
       <!-- FixedCost component as direct rows in the tbody -->
       <app-fixed-cost *ngIf="categories.fixedCost"></app-fixed-cost>
       
+      <!-- Groceries component as direct rows in the tbody -->
+      <app-groceries *ngIf="categories.groceries"></app-groceries>
+      
+      <!-- Transport component as direct rows in the tbody -->
+      <app-transport *ngIf="categories.transport"></app-transport>
+      
       <!-- Use ng-container and shared components for each category -->
       <ng-container *ngFor="let categoryKey of getCategoryKeys(categories)">
         <app-category-row

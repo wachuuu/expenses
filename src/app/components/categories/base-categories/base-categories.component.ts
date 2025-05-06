@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../services/shared/helper.service';
 import { Transaction } from '../../../models/transaction.model';
 import { FixedCostComponent } from '../fixed-cost/fixed-cost.component';
+import { GroceriesComponent } from '../groceries/groceries.component';
+import { TransportComponent } from '../transport/transport.component';
 import { BaseCategoryComponent } from '../base-category/base-category.component';
 import { CategoryRowComponent } from '../category-row/category-row.component';
 import { TransactionTableComponent } from '../transaction-table/transaction-table.component';
@@ -13,7 +15,14 @@ import { TransactionTableComponent } from '../transaction-table/transaction-tabl
 @Component({
   selector: 'app-base-categories',
   standalone: true,
-  imports: [CommonModule, FixedCostComponent, CategoryRowComponent, TransactionTableComponent],
+  imports: [
+    CommonModule, 
+    FixedCostComponent, 
+    GroceriesComponent, 
+    TransportComponent, 
+    CategoryRowComponent, 
+    TransactionTableComponent
+  ],
   templateUrl: './base-categories.component.html',
   styleUrl: './base-categories.component.scss'
 })
@@ -31,8 +40,8 @@ export class BaseCategoriesComponent extends BaseCategoryComponent {
 
   override getCategoryKeys(categories: BaseCategories): string[] {
     return Object.keys(categories).filter(key => {
-      // Exclude fixedCost as it's handled separately now
-      if (key === 'fixedCost') return false;
+      // Exclude fixedCost, groceries, and transport as they're handled separately now
+      if (key === 'fixedCost' || key === 'groceries' || key === 'transport') return false;
       
       // Regular handling for array categories
       return categories[key as keyof BaseCategories] !== undefined && 

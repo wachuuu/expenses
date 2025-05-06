@@ -36,10 +36,6 @@ export class TransactionsService {
   fixedCost$ = this.baseCategories$.pipe(map(state => state.fixedCost), distinctUntilChanged() ,filter(fixedCost => fixedCost !== undefined));
   transport$ = this.baseCategories$.pipe(map(state => state.transport), distinctUntilChanged() ,filter(transport => transport !== undefined));
   groceries$ = this.baseCategories$.pipe(map(state => state.groceries), distinctUntilChanged() ,filter(groceries => groceries !== undefined));
-  mobilePayments$ = this.baseCategories$.pipe(map(state => state.mobilePayments), distinctUntilChanged() ,filter(mobilePayments => mobilePayments !== undefined));
-  cardPayments$ = this.baseCategories$.pipe(map(state => state.cardPayments), distinctUntilChanged() ,filter(cardPayments => cardPayments !== undefined));
-  onlinePayments$ = this.baseCategories$.pipe(map(state => state.onlinePayments), distinctUntilChanged() ,filter(onlinePayments => onlinePayments !== undefined));
-  other$ = this.baseCategories$.pipe(map(state => state.other), distinctUntilChanged() ,filter(other => other.length > 0));
 
   constructor(
     private fileParserService: FileParserService,

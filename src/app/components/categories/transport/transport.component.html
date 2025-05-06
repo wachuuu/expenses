@@ -1,0 +1,50 @@
+<ng-container *ngIf="transport$ | async as transport">
+  <!-- Transport Header Row using the shared category-row component -->
+  <app-category-row
+    categoryName="Transport"
+    [total]="getTotalTransport(transport)"
+    [isExpanded]="isMainCategoryExpanded"
+    (toggleExpand)="toggleMainCategory()">
+  </app-category-row>
+  
+  <!-- Transport Expanded Details -->
+  <tr *ngIf="isMainCategoryExpanded" class="expanded-row">
+    <td colspan="3" class="transactions-container">
+      <div class="transactions-wrapper transport-wrapper">
+        <ng-container *ngFor="let subCategory of getTransportSubcategories(transport)">
+          <div class="subcategory-header clickable" (click)="toggleSubcategory(subCategory)" [class.expanded]="expandedCategories[subCategory]">
+            <div class="subcategory-title">
+              <h4>{{ subCategory }}</h4>
+              <span [ngStyle]="{ color: getTransportSubcategoryTotal(transport, subCategory) > 0 ? 'green' : 'red' }">
+                {{ getTransportSubcategoryTotal(transport, subCategory) | number:'1.2-2' }} PLN
+              </span>
+            </div>
+            <button (click)="$event.stopPropagation(); toggleSubcategory(subCategory)" class="toggle-btn">
+              {{ expandedCategories[subCategory] ? 'Hide transactions' : 'Show transactions' }}
+            </button>
+          </div>
+          
+          <div *ngIf="expandedCategories[subCategory]" class="subcategory-transactions">
+            <!-- Use shared transaction table component -->
+            <app-transaction-table
+              [transactions]="getTransportTransactions(transport, subCategory)"
+              [actionTemplate]="moveToCustomTemplate"
+              [categoryKey]="subCategory">
+            </app-transaction-table>
+          </div>
+        </ng-container>
+      </div>
+    </td>
+  </tr>
+</ng-container>
+
+<!-- Template for the move to custom category action -->
+<ng-template #moveToCustomTemplate let-transaction>
+  <select (change)="moveToCustomCategory(transaction, $event)">
+    <option [value]="''" disabled selected>Move to custom category...</option>
+    <option *ngFor="let customCategory of transactionsService.getCustomCategoriesNames() | async" 
+            [value]="customCategory">
+      {{ customCategory }}
+    </option>
+  </select>
+</ng-template>
