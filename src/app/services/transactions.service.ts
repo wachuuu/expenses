@@ -141,4 +141,42 @@ export class TransactionsService {
   getCustomCategoriesNames(): Observable<string[]> {
     return this.customCategories$.pipe(map(customCategories => Object.keys(customCategories)));
   }
+
+  generateExcelExport(): string {
+    const baseCategories = this._baseCategories$.getValue();
+    const customCategories = this._customCategories$.getValue();
+    let excelText = '';
+
+    // Process base categories
+    if (baseCategories.fixedCost) {
+      excelText += `Koszty stałe\t${this.helperService.getCategoryTotal(baseCategories.fixedCost)}\n`;
+    }
+    if (baseCategories.groceries) {
+      excelText += `Zakupy\t${this.helperService.getCategoryTotal(baseCategories.groceries)}\n`;
+    }
+    if (baseCategories.transport) {
+      excelText += `Transport\t${this.helperService.getCategoryTotal(baseCategories.transport)}\n`;
+    }
+    if (baseCategories.mobilePayments) {
+      excelText += `Płatności mobilne/BLIK\t${this.helperService.getSectionTotal(baseCategories.mobilePayments)}\n`;
+    }
+    if (baseCategories.cardPayments) {
+      excelText += `Płatności kartą\t${this.helperService.getSectionTotal(baseCategories.cardPayments)}\n`;
+    }
+    if (baseCategories.onlinePayments) {
+      excelText += `Płatności interentowe\t${this.helperService.getSectionTotal(baseCategories.onlinePayments)}\n`;
+    }
+    if (baseCategories.other?.length > 0) {
+      excelText += `Inne\t${this.helperService.getSectionTotal(baseCategories.other)}\n`;
+    }
+
+    // Process custom categories
+    for (const [category, transactions] of Object.entries(customCategories)) {
+      if (transactions.length > 0) {
+        excelText += `${category}\t${this.helperService.getSectionTotal(transactions)}\n`;
+      }
+    }
+
+    return excelText;
+  }
 }
