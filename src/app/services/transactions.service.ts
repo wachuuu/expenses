@@ -103,16 +103,42 @@ export class TransactionsService {
 
   addTransactionToCustomCategory(category: string, transaction: Transaction) {
     const baseCategoriesTransactions = this._baseCategoriesTransactions$.getValue();
-    const foundTransaction = !!baseCategoriesTransactions.find(t => t === transaction);
-    if (foundTransaction) {
+    const customCategories = this._customCategories$.getValue();
+
+    // Check if the transaction exists in base categories
+    const foundInBaseCategories = !!baseCategoriesTransactions.find(t => t === transaction);
+    if (foundInBaseCategories) {
       const updatedTransactions = baseCategoriesTransactions.filter(t => t !== transaction);
       this._baseCategoriesTransactions$.next(updatedTransactions);
-      const customCategories = this._customCategories$.getValue();
-      if (!customCategories[category]) {
-        customCategories[category] = [];
+    }
+
+    // Check if the transaction exists in any custom category and remove it
+    for (const [key, transactions] of Object.entries(customCategories)) {
+      const index = transactions.indexOf(transaction);
+      if (index !== -1) {
+        customCategories[key] = transactions.filter(t => t !== transaction);
+        break;
       }
-      customCategories[category].push(transaction);
-      this._customCategories$.next(customCategories);    
+    }
+
+    // Add the transaction to the target custom category
+    if (!customCategories[category]) {
+      customCategories[category] = [];
+    }
+    customCategories[category].push(transaction);
+    this._customCategories$.next(customCategories);
+  }
+
+  removeTransactionFromCustomCategory(category: string, transaction: Transaction) {
+    const customCategories = this._customCategories$.getValue();
+    if (customCategories[category]) {
+      const updatedTransactions = customCategories[category].filter(t => t !== transaction);
+      customCategories[category] = updatedTransactions;
+      this._customCategories$.next(customCategories);
+
+      // Optionally, add the transaction back to base categories
+      const baseCategoriesTransactions = this._baseCategoriesTransactions$.getValue();
+      this._baseCategoriesTransactions$.next([...baseCategoriesTransactions, transaction]);
     }
   }
 

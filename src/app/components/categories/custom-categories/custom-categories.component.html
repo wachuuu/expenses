@@ -34,6 +34,7 @@
                     <th class="type-column">Type</th>
                     <th class="description-column">Description</th>
                     <th class="amount-column">Amount</th>
+                    <th class="transaction-actions-column">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,15 @@
                     <td class="center-text">{{ transaction.description }}</td>
                     <td class="center-text" [ngStyle]="{ color: transaction.amount > 0 ? 'green' : 'red' }">
                       {{ transaction.amount | number:'1.2-2' }} PLN
+                    </td>
+                    <td class="actions-cell">
+                      <select (change)="moveTransaction(categoryKey, transaction, $event)">
+                        <option [value]="''" disabled selected>Move to...</option>
+                        <option *ngFor="let targetCategory of getCategoryKeys(categories)" [value]="targetCategory" [disabled]="targetCategory === categoryKey">
+                          {{ targetCategory }}
+                        </option>
+                      </select>
+                      <button class="delete-btn" (click)="deleteTransaction(categoryKey, transaction)">Delete</button>
                     </td>
                   </tr>
                 </tbody>

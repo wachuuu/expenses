@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CustomCategories } from '../../../models/categories.model';
 import { CommonModule } from '@angular/common';
 import { HelperService } from '../../../services/shared/helper.service';
+import { Transaction } from '../../../models/transaction.model';
 
 @Component({
   selector: 'app-custom-categories',
@@ -28,5 +29,19 @@ export class CustomCategoriesComponent {
 
   toggleTransactions(categoryKey: string): void {
     this.expandedCategories[categoryKey] = !this.expandedCategories[categoryKey];
+  }
+
+  moveTransaction(fromCategory: string, transaction: any, event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const toCategory = selectElement.value;
+    
+    if (fromCategory !== toCategory) {
+      this.transactionsService.removeTransactionFromCustomCategory(fromCategory, transaction);
+      this.transactionsService.addTransactionToCustomCategory(toCategory, transaction);
+    }
+  }
+
+  deleteTransaction(category: string, transaction: Transaction): void {
+    this.transactionsService.removeTransactionFromCustomCategory(category, transaction);
   }
 }
