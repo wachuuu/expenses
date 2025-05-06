@@ -1,23 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BaseCategoriesComponent } from './components/categories/base-categories/base-categories.component';
-import { CustomCategoriesComponent } from './components/categories/custom-categories/custom-categories.component';
-import { CategoryFormComponent } from "./components/category-form/category-form.component";
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TransactionsService } from './services/transactions.service';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [
     CommonModule, 
-    FileUploadComponent, 
-    BaseCategoriesComponent,
-    CustomCategoriesComponent, 
-    CategoryFormComponent
+    DashboardComponent
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   total$: Observable<number>;

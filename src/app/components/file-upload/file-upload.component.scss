@@ -1,0 +1,153 @@
+.file-upload-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-upload-header {
+  margin-bottom: 15px;
+  text-align: center;
+  
+  h2 {
+    margin: 0 0 5px;
+    color: #333;
+    font-weight: 500;
+    font-size: 1.25rem;
+  }
+  
+  .instructions {
+    color: #666;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.drop-area {
+  position: relative;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+  padding: 20px 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  margin-bottom: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background-color: #f5f5f5;
+    border-color: #aaa;
+  }
+  
+  &.drag-over {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+  }
+  
+  &.uploading {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+  }
+  
+  &.success {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+  }
+  
+  &.error {
+    background-color: #ffebee;
+    border-color: #f44336;
+  }
+}
+
+.file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.drop-icon {
+  margin-bottom: 10px;
+  
+  svg {
+    height: 36px;
+    width: 36px;
+  }
+}
+
+.drop-text {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.upload-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #2196f3;
+  }
+  
+  .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(33, 150, 243, 0.3);
+    border-top-color: #2196f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+.success-message, .error-message {
+  svg {
+    height: 36px;
+    width: 36px;
+  }
+  
+  p {
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+}
+
+.success-message p {
+  color: #4caf50;
+}
+
+.error-message p {
+  color: #f44336;
+}
+
+.upload-info {
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: auto;
+  
+  p {
+    margin: 3px 0;
+    font-size: 0.8rem;
+    color: #666;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

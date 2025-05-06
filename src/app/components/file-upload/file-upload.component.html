@@ -1,1 +1,64 @@
-<input type="file" (change)="onFileChange($event)" accept=".csv">
+<div class="file-upload-container">
+  <div class="file-upload-header">
+    <h2>Transaction Import</h2>
+    <p class="instructions">Upload a CSV file with your transactions</p>
+  </div>
+
+  <div 
+    class="drop-area" 
+    [class.drag-over]="isDragging"
+    [class.uploading]="isUploading"
+    [class.success]="uploadSuccess"
+    [class.error]="uploadError"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (click)="triggerFileInput()"
+  >
+    <input 
+      #fileInput
+      type="file" 
+      (change)="onFileChange($event)" 
+      accept=".csv"
+      class="file-input"
+    >
+    
+    <div class="drop-icon" *ngIf="!isUploading && !uploadSuccess && !uploadError">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48" fill="#777">
+        <path d="M0 0h24v24H0V0z" fill="none"/>
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5v-2z"/>
+      </svg>
+    </div>
+
+    <div class="upload-progress" *ngIf="isUploading">
+      <div class="spinner"></div>
+      <p>Uploading {{ fileName }}...</p>
+    </div>
+    
+    <div class="success-message" *ngIf="uploadSuccess">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48" fill="#4caf50">
+        <path d="M0 0h24v24H0V0z" fill="none"/>
+        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+      </svg>
+      <p>File uploaded successfully!</p>
+    </div>
+    
+    <div class="error-message" *ngIf="uploadError">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48" fill="#f44336">
+        <path d="M0 0h24v24H0V0z" fill="none"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <p>{{ errorMessage || 'An error occurred during upload' }}</p>
+    </div>
+    
+    <p class="drop-text" *ngIf="!isUploading && !uploadSuccess && !uploadError">
+      <span *ngIf="isDragging">Drop file here</span>
+      <span *ngIf="!isDragging">Drag & drop CSV, or click to browse</span>
+    </p>
+  </div>
+
+  <div class="upload-info">
+    <p><strong>Format:</strong> CSV | <strong>Max size:</strong> 10MB</p>
+    <p><strong>Required:</strong> Date, Description, Amount, Type</p>
+  </div>
+</div>

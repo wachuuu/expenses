@@ -1,2 +1,52 @@
-<input type="text" [(ngModel)]="name" placeholder="Nowa kategoria">
-<button (click)="addCategory()">Dodaj</button>
+<div class="category-form-container">
+  <div class="form-header">
+    <h2>Create Custom Category</h2>
+    <p class="description">Create a new category to organize your transactions</p>
+  </div>
+  
+  <form (ngSubmit)="addCategory()" #categoryForm="ngForm">
+    <div class="form-group">
+      <label for="categoryName">Category Name</label>
+      <input 
+        type="text" 
+        id="categoryName" 
+        name="categoryName"
+        class="form-control"
+        [class.error-input]="showError"
+        [(ngModel)]="name" 
+        placeholder="Enter category name" 
+        required
+        minlength="3"
+        [disabled]="isSubmitting"
+        autocomplete="off"
+      >
+      <div class="error-message" *ngIf="showError">
+        {{ errorMessage }}
+      </div>
+      <div class="success-message" *ngIf="showSuccess">
+        Category created successfully!
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="submit-button"
+        [disabled]="isSubmitting"
+        [class.loading]="isSubmitting"
+      >
+        <span *ngIf="!isSubmitting">Create Category</span>
+        <span *ngIf="isSubmitting" class="button-loader"></span>
+      </button>
+    </div>
+  </form>
+  
+  <div class="existing-categories" *ngIf="existingCategories.length > 0">
+    <h3>Existing Categories</h3>
+    <div class="category-list">
+      <div class="category-tag" *ngFor="let category of existingCategories">
+        {{ category }}
+      </div>
+    </div>
+  </div>
+</div>
